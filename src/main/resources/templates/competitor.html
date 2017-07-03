@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<th:block layout:fragment="competitor-content">
+    <div class="modal fade" id="competitorModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" id="modal-header" th:attr = "data-create-title = #{competitor.create.title}, data-update-title = #{competitor.update.title}">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i
+                        class="fa fa-times"></i></button>
+                    <h4 class="modal-title hidden create" th:text="#{competitor.create.title}"></h4>
+                    <h4 class="modal-title hidden update" th:text="#{competitor.update.title}"></h4>
+                </div>
+                <form th:object="${competitorForm}" class="form-horizontal" th:action="@{/competitor/save}"
+                      id="competitor-form" method="POST" enctype="multipart/form-data" th:attr="data-logo-type-error = #{create.competitor.logo.type},
+                       data-logo-size-error = #{create.competitor.logo.size}, data-create-successfully = #{create.competitor.success}, data-update-successfully = #{update.competitor.success}" >
+                    <div class="modal-body">
+                        <div id="create-competitor-successfully" class="form-group has-feedback">
+                        </div>
+                        <div class="form-group has-feedback" id="competitorName">
+                            <label class="col-sm-2 control-label">[[#{competitor.name}]] <span class="custom-asterisk">*</span></label>
+                            <div class="col-sm-10">
+                                <input type="text" name="name" id="nameCompetitor" class="form-control"
+                                       th:placeholder="#{competitor.name}" th:maxlength="50">
+
+                            </div>
+                        </div>
+
+                        <div id="competitorLogo" class="form-group has-feedback">
+                            <label class="col-sm-2 control-label">[[#{competitor.logo}]]</label>
+                            <div class="col-sm-10">
+                                <img th:src="@{/images/default/competitor-logo.jpg}" id="competitor-logo-upload"
+                                     width="100" height="100">
+                                <div><input type="file" id="competitor-logo" name="userAvatar" accept=".png, .jpg, .jpeg"
+                                             max-size="102400"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="hide alert alert-success form-group" id="modalSuccess">
+                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        <p th:text="#{email.reset.form.success}"></p>
+                    </div>
+
+                    <div class="hide alert alert alert-danger form-group" id="modalFail">
+                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        <p th:text="#{email.reset.form.fail}"></p>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">[[#{competition.button.create}]]</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            [[#{competition.button.cancel}]]
+                        </button>
+                    </div>
+                </form>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+</th:block>
+
+<div th:fragment="competitorsList"  class="results-block table-responsive">
+    <table class="table table-bordered table-hover dataTable competitor-list-table" role="grid">
+        <colgroup>
+            <col class="fixed-No-column" />
+            <col class="fixed-competitor-name-column" />
+            <col class="fixed-logo-column" />
+        </colgroup>
+        <thead>
+        <tr>
+            <th th:text="#{competitor.tableofcompetitors.No}"></th>
+            <th th:text="#{competitor.tableofcompetitors.name}"></th>
+            <th th:text="#{competitor.tableofcompetitors.logo}"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="competitor, iter  : ${competitors}">
+            <td th:text="${iter.index + 1}"></td>
+            <td sec:authorize="!hasRole('ROLE_ADMIN')">
+                <strong class="overflow" th:text="${competitor.name}"></strong>
+            </td>
+            <td sec:authorize="hasRole('ROLE_ADMIN')">
+                <a href="#" name="score" class="overflow"
+                   data-toggle="modal" data-target="#competitorModal"
+                   th:attr="data-competitor-id=${competitor.id}">
+                    <strong th:text="${competitor.name}"></strong>
+                </a>
+            </td>
+            <td><img th:attr="src=${competitor.logo}" class="flagCompetitor"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

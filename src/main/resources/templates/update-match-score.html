@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<!--
+  ~ Copyright (c) 2017. KMS Technology, Inc.
+  -->
+
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml">
+<body>
+    <div class="modal fade" id="updateMatchScoreModal" role="dialog" th:fragment='update-match-score'>
+        <div class="modal-dialog">
+            <form id="updateMatchScore" th:attr="data-success-title=#{update-match-score.success.title}" th:attrappend="data-success-message=#{update-match-score.success.message} ">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title" th:text="#{update-match-score.title}"></h4>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Update match score fail -->
+                        <div name="update-fail" class="message error-message form-group hide text-center">
+                            <div class="alert alert-warning">
+                                <p th:text="#{update-match-score.fail}"></p>
+                            </div>
+                        </div>
+                        <!-- .END Update match score fail -->
+
+                        <!-- Start time fail -->
+                        <div name="start-time-fail" class="message error-message form-group hide text-center">
+                            <div class="alert alert-warning">
+                                <p th:text="#{update-match-score.form.start-time}"></p>
+                            </div>
+                        </div>
+                        <!-- .END Start time fail -->
+
+                        <!-- Number fail -->
+                        <div name="other-fail" class="message error-message form-group hide text-center">
+                        </div>
+                        <!-- .END Number fail -->
+
+
+                        <div>
+                            <div class="col-md-3">
+                                <div class="competitor text-center">
+                                    <p name="competitor1-name" class="competitor-name"></p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="text-center">
+                                    <ul class="list-inline score-board">
+                                        <li class="score-row">
+                                            <input type="number" name="score1" class="score" min="0" placeholder="?">
+                                        </li>
+                                        <li>-</li>
+                                        <li class="score-row">
+                                            <input type="number" name="score2" class="score" min="0" placeholder="?">
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="competitor text-center">
+                                    <p name="competitor2-name" class="competitor-name"></p>
+                                </div>
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary" th:attr="data-loading-text=#{update-match-score.form.processing}" ><span th:text="#{update-match-score.form.save}"></span></button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            <span th:text="#{update-match-score.form.cancel}"></span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

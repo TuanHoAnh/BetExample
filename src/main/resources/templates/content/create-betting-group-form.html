@@ -1,0 +1,31 @@
+<div th:fragment="create-betting-group" id="createBettingGroupFragment" xmlns:th="http://www.w3.org/1999/xhtml">
+    <div th:object="${createBettingGroupForm}">
+        <!-- Create Betting Group successfully -->
+        <input type="hidden" id="success" th:value="#{create.betting.group.form.success}">
+        <!-- .END - Create Betting Group successfully -->
+
+        <div id="bettingGroupNameGroup" class="form-group has-feedback"
+             th:classappend="${#fields.hasErrors('name')} ? 'has-error' : ''">
+            <label for="bettingGroupNameInput" class="required control-label"
+                   th:text="#{createBettingGroup.form.name}"></label>
+            <input type="text" class="form-control" id="bettingGroupNameInput" th:field="*{name}" minlength="3" maxlength="10">
+            <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}"
+                  class="help-block"></span>
+        </div>
+
+        <div id="moderatorBettingGroupGroup" class="ui-widget form-group has-feedback"
+             th:classappend="${#fields.hasErrors('moderatorId')} ? 'has-error' : ''">
+            <label for="moderatorNameBettingGroup" class="required control-label"
+                   th:text="#{createBettingGroup.form.moderator}"></label>
+            <input type="text" class="form-control" id="moderatorNameBettingGroup"
+                   list="moderatorList" autocomplete="off">
+            <input type="hidden" class="form-control"
+                   id="moderatorIdBettingGroup" th:field="*{moderatorId}">
+            <span th:if="${#fields.hasErrors('moderatorId')}" th:errors="*{moderatorId}"
+                  class="help-block"></span>
+            <datalist id="moderatorList"></datalist>
+        </div>
+        <input type="hidden" id="competitionAliasKeyBettingGroup" th:field="*{competitionAliasKey}">
+    </div>
+</div>
+

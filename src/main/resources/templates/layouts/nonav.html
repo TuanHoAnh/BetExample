@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<!--
+  ~ Copyright (c) 2017. KMS Technology, Inc.
+  -->
+
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <title layout:title-pattern="$LAYOUT_TITLE - $CONTENT_TITLE">NgayThoBet</title>
+    <th:block th:replace="fragments/head :: head" />
+</head>
+<body class="hold-transition nonav-page">
+    <div class="nonav-box">
+        <div class="nonav-logo">
+            <a th:href="@{/}"><b>NgayTho</b>Bet</a>
+        </div>
+        <div class="nonav-box-body">
+            <div layout:fragment="content" />
+        </div>
+    </div>
+    <th:block layout:fragment="extra-content" />
+    <th:block th:replace="fragments/javascript :: javascript" />
+    <th:block layout:fragment="js" />
+</body>
+
+</html>

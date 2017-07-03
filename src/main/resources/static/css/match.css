@@ -1,0 +1,32 @@
+.score-board {
+    font-size: 20px;
+    line-height: 40px;
+    font-weight: 600;
+}
+
+.score {
+    color: red;
+    width: 100%;
+    border-radius: 5px;
+    text-align: center;
+    text-indent: 19%;
+}
+
+.score-row {
+    width: 40%;
+}
+
+.competitor .competitor-name{
+    font-size: 23px;
+    line-height: 40px;
+    font-weight: 600;
+}
+
+.clear {
+    clear: both;
+}
+
+
+
+
+

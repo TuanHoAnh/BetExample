@@ -1,0 +1,184 @@
+<section xmlns:th="http://www.w3.org/1999/xhtml" class="content-header">
+    <h1 th:text="#{admin.dashboard.popup.title}">Approve Betting Group</h1>
+</section>
+<div class="content" xmlns:th="http://www.w3.org/1999/xhtml">
+    <div class="box">
+        <div class="box-header">
+            <h3 class="box-title" th:text="#{admin.dashboard.popup.message(${totalBettingGroups})}"></h3>
+        </div>
+
+        <div class="box-body">
+            <div class="row">
+                <div class="col-sm-6"></div>
+                <div class="col-sm-6"></div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <table class="table table-hover table-bordered">
+                        <thead>
+                        <tr>
+                            <th th:text="#{admin.dashboard.popup.table.no}">No#</th>
+                            <th th:text="#{admin.dashboard.popup.table.user}">User</th>
+                            <th th:text="#{admin.dashboard.popup.table.date}">Date</th>
+                            <th th:text="#{admin.dashboard.popup.table.status}">Status</th>
+                            <th th:text="#{admin.dashboard.popup.table.competition}">Competition</th>
+                            <th th:text="#{admin.dashboard.popup.table.groupname}">Group name</th>
+                            <th th:text="#{admin.dashboard.popup.table.action}">Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="bettingGroup, iterStat : ${page.content}" class="custom-selected-row" th:id="${bettingGroup.id}">
+                                <td th:text="${iterStat.index + 1 + pageSize * (currentPage - 1)}">1</td>
+                                <td th:text="${bettingGroup.moderator.firstName} + ' ' + ${bettingGroup.moderator.lastName}">2</td>
+                                <td th:text="${#temporals.format(bettingGroup.createdAt, 'dd-MM-yyyy')}"></td>
+                                <td>
+                                    <span th:text="#{admin.dashboard.popup.table.status.pending}" class="label label-warning"></span>
+                                </td>
+                                <td>
+                                    <a th:href="@{#/competitions/{aliasKey}(aliasKey=${bettingGroup.competition.aliasKey})}"
+                                       th:text="${bettingGroup.competition.name}" target="_blank"></a>
+                                </td>
+                                <td>
+                                    <a th:href="@{#/competitions/{aliasKey}/bettings/{id}(aliasKey=${bettingGroup.competition.aliasKey}, id=${bettingGroup.id})}"
+                                       th:text="${bettingGroup.name}" target="_blank"></a>
+                                </td>
+                                <td>
+                                    <button
+                                        th:onclick="${'approveCreateBettingGroup(' + bettingGroup.id + ')'}" class="btn btn-flat btn-success"
+                                        th:text="#{admin.dashboard.popup.table.approve}"></button>
+                                    <button
+                                        th:onclick="${'rejectCreateBettingGroup(' + bettingGroup.id + ')'}" class="btn btn-flat btn-danger"
+                                        th:text="#{admin.dashboard.popup.table.reject}"></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <ul class="pagination pagination-sm no-margin pull-right">
+                        <li th:class="${currentPage eq beginPage} ? 'disabled' : ''">
+                            <a th:if="${currentPage eq beginPage}" th:text="#{admin.dashboard.pagination.previous}">Previous</a>
+                            <a th:if="${not (currentPage eq beginPage)}" th:text="#{admin.dashboard.pagination.previous}"
+                               th:href="@{#/competitions/default/bettings/pending-groups(pages=${currentPage - 1})}">Previous</a>
+                        </li>
+                        <li th:each="pageIndex : ${#numbers.sequence(1, endPage)}" th:class="${currentPage eq pageIndex} ? 'active' : ''">
+                            <a th:if="${currentPage eq pageIndex}" href="javascript:void(0)" th:text="${currentPage}"></a>
+                            <a th:if="${not (currentPage eq pageIndex)}" th:text="${pageIndex}"
+                               th:href="@{#/competitions/default/bettings/pending-groups(pages=${pageIndex})}"></a>
+                        </li>
+                        <li th:class="${currentPage eq endPage} ? 'disabled' : ''">
+                            <a th:if="${not (currentPage eq endPage)}" th:text="#{admin.dashboard.pagination.next}"
+                               th:href="@{#/competitions/default/bettings/pending-groups(pages=${currentPage + 1})}" >Next</a>
+                            <a th:if="${currentPage eq endPage}" href="javascript:void(0)" th:text="#{admin.dashboard.pagination.next}">Next</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" id="currentPageApproveBettingGroups" th:value="${currentPage}"/>
+    <input type="hidden" id="approve-betting-group-success"  th:value="#{admin.dashboard.toastr.approve.success}" />
+    <input type="hidden" id="approve-betting-group-fail"  th:value="#{admin.dashboard.toastr.approve.fail}" />
+    <input type="hidden" id="reject-betting-group-success"  th:value="#{admin.dashboard.toastr.reject.success}" />
+    <input type="hidden" id="reject-betting-group-fail"  th:value="#{admin.dashboard.toastr.reject.fail}" />
+    <input type="hidden" id="notification-title-success"  th:value="#{admin.dashboard.toastr.notification.success}" />
+    <input type="hidden" id="notification-title-fail"  th:value="#{admin.dashboard.toastr.notification.fail}" />
+</div>
+
+<script>
+
+    var token = $("meta[name='_csrf']").attr("content");
+    var header = $("meta[name='_csrf_header']").attr("content");
+    var currentPage = $('#currentPageApproveBettingGroups').val();
+
+
+    function approveCreateBettingGroup(id) {
+        $.ajax({
+            beforeSend: function (request) {
+                request.setRequestHeader(header, token);
+            },
+            type: 'PUT',
+            url: '/competitions/xxx/bettings/request/' + id,
+            success: function (data) {
+                if (data.data.first) {
+                    reloadSidebar();
+                    toastr.success($('#approve-betting-group-success').val(),
+                        $('#notification-title-success').val());
+
+                    numberRequestApproveBettingGroup();
+                    updateListRequestBettingGroup();
+                } else {
+                    toastr.warning($('#approve-betting-group-fail').val(),
+                        $('#notification-title-fail').val());
+                }
+            },
+            error: function (e) {
+                console.log("Error when approve creating betting group : ", e);
+            }
+        });
+    }
+
+    function rejectCreateBettingGroup(id) {
+        $.ajax({
+            beforeSend: function (request) {
+                request.setRequestHeader(header, token);
+            },
+            type: 'DELETE',
+            url: '/competitions/xxx/bettings/request/' + id,
+            success: function (data) {
+                if (data.success) {
+                    toastr.success($('#reject-betting-group-success').val(),
+                        $('#notification-title-success').val());
+
+                    numberRequestApproveBettingGroup();
+                    updateListRequestBettingGroup();
+                } else {
+                    toastr.warning($('#approve-betting-group-fail').val(),
+                        $('#notification-title-fail').val());
+                }
+            },
+            error: function (e) {
+                console.log("Error when reject creating betting group : ", e);
+            }
+        });
+    }
+
+    function numberRequestApproveBettingGroup() {
+        $.ajax({
+            beforeSend: function (request) {
+                request.setRequestHeader(header, token);
+            },
+            url: '/competitions/xxx/bettings/count-pending-groups',
+            type: 'GET',
+            success: function (data) {
+                $('#numberRequestsApprove').text(data.data);
+            },
+            error: function (e) {
+                console.log("Error when get count pending groups: ", e);
+            }
+        });
+    }
+
+    function updateListRequestBettingGroup() {
+        $.ajax({
+            beforeSend: function (request) {
+                request.setRequestHeader(header, token);
+            },
+            type: 'GET',
+            url: '/competitions/default/bettings/pending-groups?pages=' + currentPage,
+            success: function (data) {
+                $('.content-wrapper').html(data);
+            },
+            error: function (e) {
+                console.log("Error when update list request betting groups : ", e);
+            }
+        });
+    }
+
+    $(document).on("click", "#loadRequestsBettingGroup", function (e) {
+        reloadSidebar();
+    });
+
+</script>

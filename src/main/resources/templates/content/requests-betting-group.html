@@ -1,0 +1,147 @@
+<section xmlns:th="http://www.w3.org/1999/xhtml" class="content-header">
+    <h1 th:text="#{admin.dashboard.popup.title}">Approve Betting Group</h1>
+</section>
+<div class="content" xmlns:th="http://www.w3.org/1999/xhtml">
+    <div class="box box-primary">
+        <div class="box-header">
+            <h3 class="box-title" th:text="#{admin.dashboard.popup.message(${numberBettingGroups})}"></h3>
+        </div>
+
+        <div class="box-body table-responsive no-padding">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th th:text="#{admin.dashboard.popup.table.no}">No#</th>
+                    <th th:text="#{admin.dashboard.popup.table.user}">User</th>
+                    <th th:text="#{admin.dashboard.popup.table.date}">Date</th>
+                    <th th:text="#{admin.dashboard.popup.table.status}">Status</th>
+                    <th th:text="#{admin.dashboard.popup.table.competition}">Competition</th>
+                    <th th:text="#{admin.dashboard.popup.table.groupname}">Group name</th>
+                    <th th:text="#{admin.dashboard.popup.table.action}">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="bettingGroup, iterStat : ${bettingGroups}"
+                    class="custom-selected-row"
+                    th:id="${bettingGroup.first.id}">
+                    <td th:text="${iterStat.index}+1">1</td>
+                    <td th:text="${bettingGroup.first.moderator.firstName} + ' ' + ${bettingGroup.first.moderator.lastName}">
+                        2
+                    </td>
+                    <td th:text="${#dates.format(bettingGroup.second, 'dd-MM-yyyy')}">3</td>
+                    <td>
+                        <span th:text="#{admin.dashboard.popup.table.status.pending}"
+                              class="label label-warning"></span>
+                    </td>
+                    <td th:text="${bettingGroup.first.competition.name}">5</td>
+                    <td th:text="${bettingGroup.first.name}">5</td>
+                    <td>
+                        <button
+                            th:onclick="${'approveCreateBettingGroup(' + bettingGroup.first.id + ')'}" class="btn btn-flat btn-success"
+                            th:text="#{admin.dashboard.popup.table.approve}"></button>
+                        <button
+                            th:onclick="${'rejectCreateBettingGroup(' + bettingGroup.first.id + ')'}" class="btn btn-flat btn-danger"
+                            th:text="#{admin.dashboard.popup.table.reject}"></button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <input type="hidden" id="approve-betting-group-success"  th:value="#{admin.dashboard.toastr.approve.success}" />
+    <input type="hidden" id="approve-betting-group-fail"  th:value="#{admin.dashboard.toastr.approve.fail}" />
+    <input type="hidden" id="reject-betting-group-success"  th:value="#{admin.dashboard.toastr.reject.success}" />
+    <input type="hidden" id="reject-betting-group-fail"  th:value="#{admin.dashboard.toastr.reject.fail}" />
+    <input type="hidden" id="notification-title-success"  th:value="#{admin.dashboard.toastr.notification.success}" />
+    <input type="hidden" id="notification-title-fail"  th:value="#{admin.dashboard.toastr.notification.fail}" />
+</div>
+
+<script>
+
+    var token = $("meta[name='_csrf']").attr("content"),
+        header = $("meta[name='_csrf_header']").attr("content");
+
+    function approveCreateBettingGroup(id) {
+        $.ajax({
+            beforeSend: function (request) {
+                request.setRequestHeader(header, token);
+            },
+            type: 'PUT',
+            url: '/competitions/xxx/bettings/request/' + id,
+            success: function (data) {
+                if (data.data.first) {
+                    reloadSidebar();
+                    toastr.success($('#approve-betting-group-success').val(),
+                        $('#notification-title-success').val());
+
+                    numberRequestApproveBettingGroup();
+                    updateListRequestBettingGroup();
+                } else {
+                    toastr.warning($('#approve-betting-group-fail').val(),
+                        $('#notification-title-fail').val());
+                }
+            },
+            error: function (e) {
+                console.log("Error when approve creating betting group : ", e);
+            }
+        });
+    }
+
+    function rejectCreateBettingGroup(id) {
+        $.ajax({
+            beforeSend: function (request) {
+                request.setRequestHeader(header, token);
+            },
+            type: 'DELETE',
+            url: '/competitions/xxx/bettings/request/' + id,
+            success: function (data) {
+                console.log(data);
+                if (data.success) {
+                    toastr.success($('#reject-betting-group-success').val(),
+                        $('#notification-title-success').val());
+
+                    numberRequestApproveBettingGroup();
+                    updateListRequestBettingGroup();
+                } else {
+                    toastr.warning($('#approve-betting-group-fail').val(),
+                        $('#notification-title-fail').val());
+                }
+            },
+            error: function (e) {
+                console.log("Error when reject creating betting group : ", e);
+            }
+        });
+    }
+
+    function numberRequestApproveBettingGroup() {
+        $.ajax({
+            beforeSend: function (request) {
+                request.setRequestHeader(header, token);
+            },
+            url: '/competitions/xxx/bettings/count-pending-groups',
+            type: 'GET',
+            success: function (data) {
+                $('#numberRequestsApprove').text(data.data);
+            },
+            error: function (e) {
+                console.log("Error when get count pending groups: ", e);
+            }
+        });
+    }
+
+    function updateListRequestBettingGroup() {
+        $.ajax({
+            beforeSend: function (request) {
+                request.setRequestHeader(header, token);
+            },
+            type: 'GET',
+            url: '/competitions/default/bettings/pending-groups',
+            success: function (data) {
+                $('.content-wrapper').html(data);
+            },
+            error: function (e) {
+                console.log("Error when update list request betting groups : ", e);
+            }
+        });
+    }
+</script>

@@ -1,0 +1,125 @@
+<div th:fragment="betting-match-detail-for-bet" id="bettingMatchDetailForBet"
+     xmlns:th="http://www.w3.org/1999/xhtml">
+    <div th:object="${betForm}">
+        <input type="hidden" id="bettingMatchId" th:value="${bettingMatchId}">
+        <input type="hidden" id="matchExpiredMessage" th:if="${matchExpiredMessage} == true" th:value="#{betAMatch.form.text.expired}" >
+        <div class="row">
+            <div class="col-xs-6">
+                <h3 class="pull-right" th:text="#{betAMatch.form.text.timeleft} + ' : '">Betting time left:</h3>
+                <input type="hidden" id="timeExpired" th:value="#{betAMatch.form.text.expired}"/>
+            </div>
+            <div class="col-xs-6">
+                <input type="hidden" id="experyTime" th:value="${#temporals.format(betForm.timeLeft, 'yyyy/MM/dd HH:mm')}" />
+                <h3 class="pull-left text-red"><span id="clock"></span></h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-4">
+                <h1 class="pull-right" th:text="*{competitor1.name}"></h1>
+            </div>
+            <div class="text-center col-xs-4">
+                <h1 class="text-red" th:if="*{score1 eq null}" th:text="'? - ?'">?-?</h1>
+                <h1 class="text-red" th:unless="*{score1 eq null}" th:text="*{score1} + ' - ' + *{score2}">?-?</h1>
+            </div>
+            <div class="col-xs-4">
+                <h1 class="pull-left" th:text="*{competitor2.name}"></h1>
+            </div>
+        </div>
+        <div class="row">
+            <input type="hidden" th:value="*{selectedCompetitor.id}" id="idCompetitorUserSelected"/>
+            <div th:if="*{selectedCompetitor.id eq competitor1.id}" class="col-xs-4" th:id="competitor-selected-1">
+                <h4 th:text="#{betAMatch.form.text.selected(*{competitor1.name})}"></h4>
+            </div>
+            <div th:unless="*{selectedCompetitor.id eq competitor1.id}" class="col-xs-4" th:id="competitor-selected-1">
+                <button type="button" class="btn btn-app pull-right bet-competitor" th:attr="competitor-id = *{competitor1.id}"><span class="glyphicon glyphicon-hand-up"></span>Bet
+                </button>
+            </div>
+            <div class=" text-center col-xs-4">
+                <div class="row">
+                    <h4 class="no-margin" th:text="#{betAMatch.form.text.balance}">Balance</h4>
+                </div>
+                <div class="row">
+                    <h4 class="no-margin" th:text="*{balance1} + ' - ' + *{balance2}"><a href="#"><span class="glyphicon glyphicon-edit"></span></a></h4>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6 pull-left">
+                        <label class="no-margin" th:text="#{betAMatch.form.text.amount} + ' : '">Amount:</label>
+                    </div>
+                    <div class="col-xs-6 pull-right">
+                        <label class="text-red" th:text="*{#numbers.formatDecimal(amount, 0,0,'COMMA')} + ' ' + VND"></label>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-4" th:if="*{selectedCompetitor.id eq competitor2.id}" th:id="competitor-selected-2">
+                <h4 th:text="#{betAMatch.form.text.selected(*{competitor2.name})}"></h4>
+            </div>
+            <div class="col-xs-4" th:unless="*{selectedCompetitor.id eq competitor2.id}" th:id="competitor-selected-2">
+                <button type="button" class="btn btn-app pull-left bet-competitor" th:attr="competitor-id = *{competitor2.id}"><span class="glyphicon glyphicon-hand-up"></span>Bet
+                </button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="text-center col-xs-12">
+                <h4 th:text="#{betAMatch.form.text.moderator.notes(*{comment})}"></h4>
+            </div>
+        </div>
+
+        <!--avatar -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="box box-success pull-right">
+                    <!-- /.box-header -->
+                    <div class="box-body no-padding">
+                        <ul class="users-list clearfix" th:each="player: *{players1}">
+                            <li>
+                                <img th:src="@{${player.player.avatar}}">
+                                <label class="users-list-name" th:text="${player.player.firstName + ' ' + player.player.lastName}"></label>
+                            </li>
+                        </ul>
+                        <!-- /.users-list -->
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="box box-success pull-left">
+                    <!-- /.box-header -->
+                    <div class="box-body no-padding">
+                        <ul class="users-list clearfix" th:each="player: *{players2}">
+                            <li>
+                                <img th:src="@{${player.player.avatar}}" >
+                                <label class="users-list-name" th:text="${player.player.firstName + ' ' + player.player.lastName}"></label>
+                            </li>
+                        </ul>
+                        <!-- /.users-list -->
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+            </div>
+        </div>
+        <!-- .end avatar -->
+    </div>
+
+    <script>
+        var timeLeft = $("#experyTime").val();
+        $("#clock").countdown(timeLeft)
+            .on('update.countdown', function(event) {
+                var format = '%Hh %Mm %Ss';
+                if(event.offset.totalDays > 0) {
+                    format = '%-d day%!d ' + format;
+                }
+                if(event.offset.weeks > 0) {
+                    format = '%-w week%!w ' + format;
+                }
+                $(this).html(event.strftime(format));
+            })
+            .on('finish.countdown', function(event) {
+                $(this).html($('#timeExpired').val());
+                $('#competitor-selected-1 .bet-competitor').remove();
+                $('#competitor-selected-2 .bet-competitor').remove();
+            });
+
+
+    </script>
+</div>
+

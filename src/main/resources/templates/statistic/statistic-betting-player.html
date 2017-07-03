@@ -1,0 +1,165 @@
+<div xmlns:th="http://www.thymeleaf.org" th:remove="tag">
+    <section id="group-content-form" th:fragment="statistic-content" class="content">
+        <div>
+                <!-- Custom Tabs (Pulled to the right) -->
+                <div class="nav-tabs-custom">
+                    <ul class="nav nav-tabs pull-right">
+                        <li class="active"><a class="tab-group-bet"
+                                              th:href="@{#/competitions/}+${aliasKey}+@{/bettings/} + ${groupId}+ @{/statistic-betting-players}"
+                                              data-toggle="tab">[[#{group.detail.tab.statistic}]]</a></li>
+                        <li><a class="tab-group-bet"
+                               th:href="@{#/competitions/}+${aliasKey}+@{/bettings/} + ${groupId}+ @{/reload}"
+                               data-toggle="tab">[[#{group.detail.tab.bettinglist}]]</a></li>
+                        <li class="pull-left header" id="tab-header" th:text="#{bettinggroupdetail.group}  + ' ' + ${bettingGroupName}"></li>
+                    </ul>
+                    <div id="group-content" class="tab-content">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="box">
+                                    <div class="box-header">
+                                        <h3 id="" class="box-title">[[#{statistic.betting.players.title}]]</h3>
+                                    </div>
+                                    <!-- /.box-header -->
+                                    <div class="box-body">
+                                        <div id="example2_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
+                                            <div class="row">
+                                                <div class="col-sm-6"></div>
+                                                <div class="col-sm-6"></div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-12 table-responsive">
+                                                    <table id="example2"
+                                                           class="table table-bordered table-hover dataTable betting-player-table"
+                                                           role="grid" aria-describedby="example2_info">
+                                                        <colgroup>
+                                                            <col width="15%">
+                                                            <col width="15%">
+                                                            <col width="10%">
+                                                            <col width="10%">
+                                                            <col width="10%">
+                                                            <col width="10%">
+                                                            <col width="10%">
+                                                            <col width="10%">
+                                                            <col width="10%">
+                                                            <col width="10%">
+                                                        </colgroup>
+                                                        <thead>
+                                                        <tr role="row">
+                                                            <th class="text-center" tabindex="0" aria-controls="example2"
+                                                                rowspan="1"
+                                                                colspan="1" th:text="#{statistic.betting.players.player}">
+                                                            </th>
+                                                            <th class="text-center" tabindex="0" aria-controls="example2"
+                                                                rowspan="1"
+                                                                colspan="1" th:text="#{statistic.betting.players.match}">
+                                                            </th>
+                                                            <th class="text-center" tabindex="0" aria-controls="example2"
+                                                                rowspan="1"
+                                                                colspan="1" th:text="#{statistic.betting.players.expired}">
+                                                            </th>
+                                                            <th class="text-center" tabindex="0" aria-controls="example2"
+                                                                rowspan="1"
+                                                                colspan="1"
+                                                                th:text="#{statistic.betting.players.comp1.score}">
+                                                            </th>
+                                                            <th class="text-center" tabindex="0" aria-controls="example2"
+                                                                rowspan="1"
+                                                                colspan="1"
+                                                                th:text="#{statistic.betting.players.comp1.balance}">
+                                                            </th>
+                                                            <th class="text-center" tabindex="0" aria-controls="example2"
+                                                                rowspan="1"
+                                                                colspan="1"
+                                                                th:text="#{statistic.betting.players.comp2.score}">
+                                                            </th>
+                                                            <th class="text-center" tabindex="0" aria-controls="example2"
+                                                                rowspan="1"
+                                                                colspan="1"
+                                                                th:text="#{statistic.betting.players.comp2.balance}">
+                                                            </th>
+                                                            <th class="text-center" tabindex="0" aria-controls="example2"
+                                                                rowspan="1"
+                                                                colspan="1"
+                                                                th:text="#{statistic.betting.players.bet.competitor}">
+                                                            </th>
+                                                            <th class="text-center" tabindex="0" aria-controls="example2"
+                                                                rowspan="1"
+                                                                colspan="1" th:text="#{statistic.betting.players.loss}">
+                                                            </th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+
+                                                        <tr th:each="bettingPlayer : ${bettingPlayersGroup}" role="row"
+                                                            class="odd">
+                                                            <td th:text="${bettingPlayer.getFullName()}"></td>
+                                                            <td class="row" th:object="${bettingPlayer.bettingMatch.match}">
+                                                                <label class="label label-primary col-md-5"
+                                                                   th:text="*{competitor1.name}"></label>
+                                                                <label class="label bg-green col-md-2"> vs </label>
+                                                                <label class="label label-primary col-md-5"
+                                                                   th:text="*{competitor2.name}"></label>
+                                                            </td>
+                                                            <td th:text="${#strings.replace(bettingPlayer.bettingMatch.expiryTime,'T',' ')}"></td>
+                                                            <td th:text="${bettingPlayer.bettingMatch.match.score1} ?: #{statistic.betting.players.notscore}"></td>
+                                                            <td th:text="${bettingPlayer.bettingMatch.balance1}"></td>
+                                                            <td th:text="${bettingPlayer.bettingMatch.match.score2} ?: #{statistic.betting.players.notscore}"></td>
+                                                            <td th:text="${bettingPlayer.bettingMatch.balance2}"></td>
+                                                            <td th:text="${bettingPlayer.betCompetitor}
+                                                                            ? ${bettingPlayer.betCompetitor.name}
+                                                                            : #{statistic.betting.players.notbet}">
+                                                            </td>
+                                                            <td th:text="${bettingPlayer.calculateLossAmount()}"></td>
+                                                        </tr>
+
+                                                        </tbody>
+                                                        <tfoot>
+
+                                                        </tfoot>
+                                                        <div id="info-table" th:attr="data-info=#{statistic.betting.players.info}"></div>
+                                                        <div id="table-previous" th:attr="data-info=#{statistic.betting.players.previous}"></div>
+                                                        <div id="table-next" th:attr="data-info=#{statistic.betting.players.next}"></div>
+                                                        <div id="chart-loss" th:attr="data-info=#{statistic.betting.players.totalloss}"></div>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- /.box-body -->
+                                </div>
+                                <!-- /.box -->
+
+                                <!-- LINE CHART -->
+                                <div class="box box-info">
+                                    <div class="box-header with-border">
+                                        <h3 class="box-title">[[#{statistic.betting.players.chart.title}]]</h3>
+
+                                        <div class="box-tools pull-right">
+                                            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
+                                                class="fa fa-minus"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="box-body chart-responsive">
+                                        <div class="chart" id="line-chart-betting-players" style="height: 300px;"></div>
+                                    </div>
+
+                                    <!-- /.box-body -->
+                                </div>
+                                <!-- /.box -->
+
+                            </div>
+                            <!-- /.col -->
+                        </div>
+                    </div>
+
+                </div>
+            <!-- nav-tabs-custom -->
+        </div>
+        <!-- /.col -->
+        <!-- /.row -->
+        <script th:src="@{/webjars/adminlte/2.3.11/plugins/morris/morris.js}"></script>
+        <script th:inline="javascript" th:src="@{/js/betting-players-statistic-chart.js}"></script>
+    </section>
+</div>

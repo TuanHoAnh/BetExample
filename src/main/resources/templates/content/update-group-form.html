@@ -1,0 +1,158 @@
+<div id="update-group-form" th:fragment="update-group-form" class="modal-dialog" xmlns:th="http://www.w3.org/1999/xhtml">
+
+    <form th:action="@{'/competitions/'+ ${aliasKey} + '/bettings/' + ${bettingGroupEditorForm.id} +'/update'}"
+          id="updateBettingGroup" method="POST">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title"><b th:text="#{updatebettinggroup.form.tittle}"></b></h4>
+            </div>
+            <div class="modal-body">
+
+
+                <div id="update-group-body" th:fragment="update-group-body" class="span3"
+                     th:object="${bettingGroupEditorForm}">
+
+                    <input id="groupId" type="hidden" th:field="*{id}" class="form-control">
+                    <b class="required control-label" th:text="#{updatebettinggroup.form.groupname}"></b>
+                    <div id="groupName" class="form-group has-feedback"
+                         th:classappend="${#fields.hasErrors('groupName')}?'has-error':''">
+                        <input id="groupNameField" type="text" th:field="*{groupName}" class="form-control"
+                               maxlength="10" onfocus="onInputChange()">
+                        <span th:if="${#fields.hasErrors('groupName')}" th:errors="*{groupName}"
+                              class="help-block"></span>
+                    </div>
+                    <b class="required control-label" th:text="#{updatebettinggroup.form.players}"></b>
+                    <div id="players" class="form-group has-feedback"
+                         th:classappend="${#fields.hasErrors('players')}?'has-error':''">
+                        <input name="tags" id="addPlayerField" type="hidden" th:field="*{players}"
+                               class="form-control">
+                        <ul id="addPlayer" onfocus="onInputChange()"></ul>
+                        <span th:if="${#fields.hasErrors('players')}" th:errors="*{players}"
+                              class="help-block"></span>
+                    </div>
+                    <b th:text="#{updatebettinggroup.form.moderator}"></b>
+                    <div id="moderator" class="form-group has-feedback"
+                         th:classappend="${#fields.hasErrors('moderator')}?'has-error':''">
+                        <input id="moderatorField" type="text" th:field="*{moderator}" class="form-control"
+                               readonly>
+                        <span th:if="${#fields.hasErrors('moderator')}" th:errors="*{moderator}"
+                              class="help-block"></span>
+                    </div>
+                    <b th:text="#{updatebettinggroup.form.rules}"></b>
+                    <div id="rules" class="form-group has-feedback"
+                         th:classappend="${#fields.hasErrors('rules')}?'has-error':''">
+                                <textarea id="rulesField" rows="4" cols="50" th:field="*{rules}"
+                                          class="form-control" onfocus="onInputChange()"></textarea>
+                        <span th:if="${#fields.hasErrors('rules')}" th:errors="*{rules}"
+                              class="help-block"></span>
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary"
+                        th:text="#{updatebettinggroup.form.submit}"></button>
+                <button id="button-close" type="button" class="btn btn-default" data-dismiss="modal"
+                        th:text="#{updatebettinggroup.form.cancel}" onclick="onBackClick()"></button>
+            </div>
+        </div>
+    </form>
+    <link href="/css/jquery.tagit.css" rel="stylesheet" type="text/css">
+    <link href="/css/tagit.ui-zendesk.css" rel="stylesheet" type="text/css">
+    <link href="/css/asterisk.css" rel="stylesheet" type="text/css">
+    <script th:inline="javascript">
+
+        $('#updateBettingGroup').on('submit', function (event) {
+            event.preventDefault();
+
+            $.ajax({
+                type: 'POST',
+                beforeSend: function (request) {
+                    request.setRequestHeader(header, token);
+                },
+                url: $('#updateBettingGroup').attr('action'),
+                data: $('#updateBettingGroup').serialize(),
+                success: function (response) {
+
+                    if ($(response).find('.has-error').length) {
+                        $('#update-group-body').replaceWith(response);
+
+                    } else {
+                        toastr.success([[${bettingGroupEditorForm.groupName}]] + ' ' + [[#{updatebettinggroup.form.successful}]]);
+                        $('#update-group-body').replaceWith(response);
+                        reloadSidebar();
+                    }
+                    tagit();
+                },
+                fail: function (e) {
+                    console.log(e);
+                },
+                error: function (e) {
+                    console.log(e);
+                }
+            });
+        });
+
+        function tagit() {
+            $('#addPlayer').tagit({
+                singleFieldNode: $('#addPlayerField'),
+                placeholderText: '  Add more players',
+                singleField: true,
+                autocomplete: ({
+                    source: function (request, response) {
+                        $.ajax({
+                            type: 'GET',
+                            beforeSend: function (request) {
+                                request.setRequestHeader(header, token);
+                            },
+                            url: '/user/search-user',
+                            data: {
+                                search: request.term
+                            },
+                            success: function (data) {
+                                response(data.data);
+                            },
+                            error: function (request, status, error) {
+                                alert(error);
+                            }
+                        })
+                    },
+                    minLength: 2
+                })
+            });
+        }
+
+        function onInputChange() {
+            $('#groupName').removeClass('has-error').find('span').remove();
+            $('.help-block').remove();
+            $('#moderator').removeClass('has-error').find('span').remove();
+            $('#rules').removeClass('has-error').find('span').remove();
+        }
+
+        function onBackClick() {
+            $.ajax({
+                type: 'GET',
+                beforeSend: function (request) {
+                    request.setRequestHeader(header, token);
+                },
+                url: '/competitions/'+ [[${aliasKey}]] + '/bettings/' + [[${bettingGroupEditorForm.id}]] +'/reload',
+                success: function (response) {
+
+                    $('#update-group-form').replaceWith(response);
+                },
+                fail: function (e) {
+                    console.log(e);
+                },
+                error: function (e) {
+                    console.log(e);
+                }
+            });
+        }
+
+    </script>
+</div>
+
+
+

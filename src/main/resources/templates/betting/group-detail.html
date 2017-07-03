@@ -1,0 +1,40 @@
+
+<div id="group-content-form"></div>
+
+<th:block  xmlns:th="http://www.w3.org/1999/xhtml">
+
+    <script src="/js/custom-jquery-ui.js"></script>
+    <script src="/js/tag-it.js" type="text/javascript" charset="utf-8"></script>
+
+
+    <script th:inline="javascript">
+
+        var token = $("meta[name='_csrf']").attr("content"),
+            header = $("meta[name='_csrf_header']").attr("content");
+
+        $(document).ready(function (){
+
+            $.ajax({
+                type: 'GET',
+                beforeSend: function (request) {
+                    request.setRequestHeader(header, token);
+                },
+                url: '/competitions/'+ [[${aliasKey}]] + '/bettings/' + [[${groupId}]] +'/reload',
+                success: function (response) {
+
+                    $('#group-content-form').replaceWith(response);
+                },
+                fail: function (e) {
+                    console.log(e);
+                },
+                error: function (e) {
+                    console.log(e);
+                }
+            });
+        });
+
+    </script>
+</th:block>
+
+
+

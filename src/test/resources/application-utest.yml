@@ -1,0 +1,14 @@
+spring:
+    datasource:
+        url: "jdbc:h2:mem:ngaythobet;db_close_on_exit=false;mode=PostgreSQL"
+        username: sa
+        password:
+        driver-class-name: org.h2.Driver
+    jpa:
+        hibernate.ddl-auto: validate
+    data:
+        mongodb:
+            port: 0
+    main:
+        web-environment: false
+        show-banner: false

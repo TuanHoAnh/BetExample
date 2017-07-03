@@ -1,0 +1,23 @@
+.sidebar-menu > li.active-competition > a {
+    color: #fff;
+    background: #1e282c;
+    border-left-color: #3c8dbc;
+}
+
+.in-active {
+    color: #8aa4af;
+}
+
+.linkCompetition {
+   cursor: pointer;
+}
+
+.sidebar-text {
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 75%;
+    vertical-align: bottom;
+}
+

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<!--
+  ~ Copyright (c) 2017. KMS Technology, Inc.
+  -->
+
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+        xmlns="http://www.w3.org/1999/xhtml">
+<body>
+<aside class="main-sidebar" th:fragment="sidebar">
+    <section class="sidebar">
+
+        <!-- sidebar menu -->
+        <div id="add-group-competition" sec:authorize="hasRole('ROLE_ADMIN')" class="btn-group pull-right add-dropdown-default add-dropdown">
+            <a id="add-btn-competition" href="#" type="button" class="circle-btn btn btn-xs btn-success bg-green dropdown-toggle"
+               data-toggle="dropdown" aria-expanded="false"><i class="fa fa-plus"></i></a>
+            <ul class="dropdown-menu flexnav" role="menu">
+                <li><a href="#/competitions/create-form">[[#{sidebar.competition.add-option}]]</a></li>
+                <li><a href="#competitions/popup/auto-popup-import" class="show-popup" id="generateImportId">[[#{sidebar.competition.auto-import}]]</a></li>
+            </ul>
+
+        </div>
+        <ul th:fragment="sidebar-competitions" id="sidebarCompetitions" class="sidebar-menu" >
+            <li class="header" th:text="#{sidebar.competition}"></li>
+
+            <li sec:authorize="hasRole('ROLE_ADMIN')"
+                th:each="competition,iterStat : ${competitions}"
+                th:if="${competition.status != null && competition.status.toString() != 'FINISHED'}"
+                class="treeview competitionName" th:attr="data-alias-key=${competition.aliasKey}"
+                th:classappend="${activeCompetition == competition.aliasKey}?'active-competition active'">
+                <a>
+                    <i class="fa fa-futbol-o text-yellow"></i>
+                    <span class="linkCompetition sidebar-text" th:text="${competition.name}"></span>
+                    <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                </a>
+                <ul class="treeview-menu"
+                    th:classappend="${activeCompetition == competition.aliasKey}?'menu-open'"
+                    th:style="${activeCompetition == competition.aliasKey} ? 'display:block'">
+                    <li th:if="${#lists.isEmpty(competition.groups)}">
+                        <a>
+                            <div  class="in-active" th:text="#{sidebar.group.no-group-found}"></div>
+                        </a>
+                    </li>
+                    <li th:each="group : ${competition.groups}"
+                        th:if="${group.status.toString() == 'PUBLISHED' || group.status.toString() == 'DRAFT'}"
+                        class="group-name"
+                        th:classappend="${activeGroup == group.id}?'active'">
+                        <a th:href="@{'#/competitions/' + ${competition.aliasKey} + '/bettings/' + ${group.id}}">
+                            <i class="fa fa-circle-o"></i>
+                            <div class="sidebar-text" th:text="${group.name}"></div>
+                        </a>
+                </ul>
+            </li>
+            <li sec:authorize="hasRole('ROLE_USER')" th:each="competition,iterStat : ${competitions}"
+                th:if="${competition.status}"
+                class="treeview competitionName" th:attr="data-alias-key=${competition.aliasKey}"
+                th:classappend="${activeCompetition == competition.aliasKey}?'active-competition active'">
+                <a th:if="${competition.status.toString() == 'PUBLISHED'}">
+                    <i class="fa fa-futbol-o text-yellow"></i>
+                    <span class="linkCompetition sidebar-text" th:text="${competition.name}"></span>
+                    <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                </a>
+                <ul class="treeview-menu"
+                    th:classappend="${activeCompetition == competition.aliasKey}?'menu-open'"
+                    th:style="${activeCompetition == competition.aliasKey}?'display:block'">
+                    <li th:if="${competitionsJoining != null && !competitionsJoining.contains(competition.aliasKey)}">
+                        <a>
+                            <div class="in-active" th:text="#{sidebar.group.no-group-found}"></div>
+                        </a>
+                    </li>
+                    <li th:each="group : ${competition.groups}"
+                        th:if="${user != null
+                        && (group.moderator.username == user && (group.status.toString() == 'PUBLISHED' || group.status.toString() == 'DRAFT'))
+                        || (group.players.contains(user) && group.status.toString() == 'PUBLISHED') }"
+                        class="group-name"
+                        th:classappend="${activeGroup == group.id}?'active'">
+                        <a th:href="@{'#/competitions/' + ${competition.aliasKey} + '/bettings/' + ${group.id}}">
+                            <i class="fa fa-circle-o"></i>
+                            <div class="sidebar-text" th:text="${group.name}"></div>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li th:text="#{fragment.sidebar.administration}" class="header">ADMINISTRATION</li>
+            <li><a><i class="fa fa-users text-aqua"></i> <span>[[#{sidebar.user-management}]]</span></a></li>
+            <li><a><i class="fa fa-cog text-aqua"></i> <span>[[#{sidebar.settings}]]</span></a></li>
+        </ul>
+    </section>
+
+</aside>
+</body>
+</html>

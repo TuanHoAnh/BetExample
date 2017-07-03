@@ -1,0 +1,329 @@
+
+<section class="content-header" xmlns:th="http://www.w3.org/1999/xhtml">
+    <h1><b>[[#{profile.tittle}]]</b></h1>
+</section>
+
+<div class="content" xmlns:th="http://www.w3.org/1999/xhtml">
+    <div class="row">
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="info-box">
+                <span class="info-box-icon bg-aqua"><i class="fa fa-user"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text">
+                        <a id="updateProfileButton" href="#" data-toggle="modal" data-target="#updateProfileModal" onfocus="clearFormError()"><b>[[#{updateprofile.title}]]</b></a>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <!-- /.col -->
+        <div th:if="!${SSO}" class="col-md-6 col-sm-6 col-xs-12">
+            <div class="info-box">
+                <span class="info-box-icon bg-green"><i class="fa fa-key"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text">
+                        <a href="#" data-toggle="modal" data-target="#changePasswordModal" id="changePasswordLink"><b>[[#{changepassword.form.title}]]</b></a>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+
+</div>
+<th:block xmlns:th="http://www.w3.org/1999/xhtml">
+    <!-- updateProfile Modal -->
+    <div class="modal fade" id="updateProfileModal" role="dialog">
+        <div class="modal-dialog">
+            <form th:action="@{/user/update-profile}" id="updateProfile" method="POST">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title"><b th:text="#{updateprofile.title}"></b></h4>
+                    </div>
+                    <div class="modal-body">
+
+                        <div id="profile-content" th:fragment="update-profile-content" th:object="${userProfileForm}">
+
+                            <input id="idField" type="hidden" th:field="*{id}" class="form-control" readonly>
+                            <b th:text="#{updateprofile.form.email}"></b>
+                            <div id="email" class="form-group has-feedback" th:classappend="${#fields.hasErrors('email')}?'has-error':''">
+                                <input id="emailField" type="email" th:field="*{email}" class="form-control" readonly>
+                                <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+                            </div>
+                            <b th:text="#{updateprofile.form.firstname} " ></b>
+                            <div id="firstName" class="form-group has-feedback" th:classappend="${#fields.hasErrors('firstName')}?'has-error':''">
+                                <input id="firstNameField" type="text" th:field="*{firstName}" class="form-control" onfocus="clearFormError()" maxlength="50">
+                                <span th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}" class="help-block"></span>
+                            </div>
+                            <b th:text="#{updateprofile.form.lastname}"></b>
+                            <div id="lastName" class="form-group has-feedback" th:classappend="${#fields.hasErrors('lastName')}?'has-error':''">
+                                <input id="lastNameField" type="text" th:field="*{lastName}" class="form-control" onfocus="clearFormError()" maxlength="50">
+                                <span th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}" class="help-block"></span>
+                            </div>
+                            <div id="language" class="form-group has-feedback" th:classappend="${#fields.hasErrors('languageTag')}?'has-error':''">
+                                <b th:text="#{updateprofile.form.language}"></b>
+                                <select id="languageField" class="form-control" th:field="*{languageTag}" >
+                                    <option value="vi">[[#{updateprofile.form.language.vi}]]</option>
+                                    <option value="en">[[#{updateprofile.form.language.en}]]</option>
+                                </select>
+                                <span th:if="${#fields.hasErrors('languageTag')}" th:errors="*{languageTag}" class="help-block"></span>
+                            </div>
+                            <b th:text="#{updateprofile.form.image}"></b>
+                            <div id="avatarDiv" class="form-group has-feedback" align="center"><br>
+                                <img id="avatarImage" class="img-circle" alt="User Image" width="200" height="200">
+                                <input id="avatarInput" type="file" name="userAvatar" accept=".png, .jpg, .jpeg" max-size="102400">
+                                <input id="avatar" th:field="*{avatar}" type="hidden">
+                                <span th:if="${#fields.hasErrors('avatar')}" th:errors="*{avatar}" class="help-block"></span>
+                                <span id='fileError' class='label label-warning hidden'>[[#{updateprofile.form.error.avatar}]]</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="submit" type="submit" class="btn btn-primary" th:text="#{updateprofile.form.submit}"></button>
+                        <button id="cancel" type="button" class="btn btn-default" data-dismiss="modal" th:text="#{updateprofile.form.cancel}"></button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal fade" id="changePasswordModal" role="dialog">
+        <div class="modal-dialog">
+            <form th:action="@{/user/change-password}" id="changePassword"
+                  method="POST" >
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title" th:text="#{changepassword.form.title}"></h4>
+                    </div>
+
+                    <div class="modal-body">
+
+                        <!-- Change password successfully -->
+                        <div id="success" class="form-group hide">
+                            <div class="alert alert-success">
+                                <p th:text="#{changepassword.form.success}"></p>
+                            </div>
+                        </div>
+                        <!-- .END - Change password successfully -->
+
+                        <!-- Change password fail -->
+                        <div id="failer" class="form-group hide">
+                            <div class="alert alert-warning">
+                                <p th:text="#{changepassword.form.failer}"></p>
+                            </div>
+                        </div>
+                        <!-- .END Change password fail -->
+                        <div id="change-password-content" th:fragment="change-password-content" th:object="${changePasswordForm}">
+                        <div id="currentPassword" class="form-group has-feedback"
+                             th:classappend="${#fields.hasErrors('currentPassword')}?'has-error':''">
+                            <label for="currentPasswordField" th:text="#{changepassword.form.curentpassword}" class="required control-label"></label>
+                            <input type="password" class="form-control" id="currentPasswordField" th:field="*{currentPassword}" autocomplete="nope">
+                            <span th:if="${#fields.hasErrors('currentPassword')}" th:errors="*{currentPassword}" class="help-block"></span>
+                        </div>
+                        <div id="newPassword" class="form-group has-feedback"
+                             th:classappend="${#fields.hasErrors('newPassword')}?'has-error':''">
+                            <label for="newPasswordField" th:text="#{changepassword.form.newpassword}" class="required control-label"></label>
+                            <input type="password" class="form-control" id="newPasswordField" th:field="*{newPassword}">
+                            <span th:if="${#fields.hasErrors('newPassword')}" th:errors="*{newPassword}" class="help-block"></span>
+                        </div>
+                        <div id="confirmNewPassword" class="form-group has-feedback"
+                             th:classappend="${#fields.hasErrors('confirmNewPassword')}?'has-error':''">
+                            <label for="confirmNewPasswordField" th:text="#{changepassword.form.confirm.newpassword}" class="required control-label"></label>
+                            <input type="password" class="form-control" id="confirmNewPasswordField" th:field="*{confirmNewPassword}">
+                            <span th:if="${#fields.hasErrors('confirmNewPassword')}" th:errors="*{confirmNewPassword}" class="help-block"></span>
+                        </div>
+                    </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary" th:text="#{changepassword.form.submit}"></button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal"
+                                th:text="#{changepassword.form.cancel}"></button>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <link href="/css/asterisk.css" rel="stylesheet" type="text/css">
+
+    <script th:inline="javascript">
+
+        var token = $("meta[name='_csrf']").attr("content");
+        var header = $("meta[name='_csrf_header']").attr("content");
+        var update_profile_url = $('#updateProfile').attr('action');
+
+        function clearFormError() {
+            $('#email').removeClass('has-error').find('span').remove();
+            $('.help-block').remove();
+            $('#firstName').removeClass('has-error').find('span').remove();
+            $('#lastName').removeClass('has-error').find('span').remove();
+            $('#language').removeClass('has-error').find('span').remove();
+        }
+
+        $(document).ready(function () {
+            var avatarFile = null;
+
+            function checkExtension(file){
+                return file['type'].split('/')[0] === 'image';
+            }
+
+            $(document).on('change', '#avatarInput', function (event) {
+                avatarFile = event.target.files[0];
+                var reader = new FileReader();
+
+                if ((avatarFile.size > $(this).attr('max-size')) || !checkExtension(avatarFile)) {
+                    $('#fileError').removeClass('hidden');
+                    $('#submit').addClass('hidden');
+                    avatarFile = null;
+                } else {
+                    $('#fileError').addClass('hidden');
+                    $('#submit').removeClass('hidden');
+                    reader.onload = function (e) {
+                        $('#avatar').val(e.target.result);
+                        $('#avatarImage')
+                            .attr('src', $('#avatar').val());
+                    };
+                    reader.readAsDataURL(avatarFile);
+                }
+
+            });
+
+            $('#updateProfileButton').on('click', function () {
+
+                $.ajax({
+                    type: 'GET',
+                    beforeSend: function (request) {
+                        request.setRequestHeader(header, token);
+                    },
+                    url: update_profile_url,
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (response) {
+
+                        $('#profile-content').replaceWith(response);
+                        $('#avatarImage').attr("src", $(response).find('#avatar').val());
+                        $('#submit').removeClass('hidden');
+                    },
+                    fail: function (e) {
+                        console.log(e);
+                    },
+                    error: function (e) {
+                        console.log(e);
+                    }
+                });
+            });
+
+            $('#updateProfile').on('submit', function (event) {
+                event.preventDefault();
+
+                var firstName = $('#firstNameField').val();
+                var lastName = $('#lastNameField').val();
+                var languageTag = $('#languageField').val();
+                var id = $('#idField').val();
+                var avatar = $('#avatar').val();
+                var email = $('#emailField').val();
+
+                var form = new FormData();
+
+                form.append("id", id);
+                form.append("firstName", firstName);
+                form.append("lastName", lastName);
+                form.append("languageTag", languageTag);
+                form.append("email", email);
+                form.append("avatar", avatar);
+                if (avatarFile !== null) {
+                    form.append("avatarFile", avatarFile);
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    beforeSend: function (request) {
+                        request.setRequestHeader(header, token);
+                    },
+                    url: update_profile_url,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    data: form,
+                    success: function (response) {
+                        $('#profile-content').replaceWith(response);
+                        $('#avatarImage').attr("src", $(response).find('#avatar').val());
+                        if (!$(response).find('.has-error').length) {
+
+                            toastr.success([[#{updateprofile.form.success}]]);
+                            window.setTimeout(function () {
+                                $('#updateProfileModal').modal('hide');
+                                document.location.reload();
+                            }, 2000);
+                        }
+                    },
+                    fail: function (e) {
+                        console.log(e);
+                    },
+                    error: function (e) {
+                        console.log(e);
+                    }
+                });
+            });
+        });
+
+        $('#changePasswordLink').on('click', function () {
+            $('#success').addClass('hide');
+            $('#failer').addClass('hide');
+
+            $('#currentPassword').removeClass('has-error').find('span').remove();
+            $('#newPassword').removeClass('has-error').find('span').remove();
+            $('#confirmNewPassword').removeClass('has-error').find('span').remove();
+
+            $('#currentPasswordField').val("");
+            $('#newPasswordField').val("");
+            $('#confirmNewPasswordField').val("");
+        });
+
+        $('#changePassword').on('submit', function (event) {
+            event.preventDefault();
+            $('#success').addClass('hide');
+            $('#failer').addClass('hide');
+            $('#currentPassword').removeClass('has-error').find('span').remove();
+            $('#newPassword').removeClass('has-error').find('span').remove();
+            $('#confirmNewPassword').removeClass('has-error').find('span').remove();
+
+
+            var token = $("meta[name='_csrf']").attr("content");
+            var header = $("meta[name='_csrf_header']").attr("content");
+
+            $.ajax({
+                type: 'POST',
+                beforeSend: function (request) {
+                    request.setRequestHeader(header, token);
+                },
+                url: '/user/change-password',
+                data: $('#changePassword').serialize(),
+                success: function (data) {
+                    if ($(data).find('.has-error').length > 0) {
+                        $('#change-password-content').replaceWith(data);
+                    } else {
+                        toastr.success([[#{changepassword.form.success}]]);
+                        $('#change-password-content').replaceWith(data);
+                        window.setTimeout(function () {
+                            $('#changePasswordModal').modal('hide');
+                        }, 2000);
+                    }
+                },
+                fail: function (e) {
+                    console.log(e);
+                },
+                error: function (e) {
+                    console.log(e);
+                }
+            });
+        });
+    </script>
+</th:block>
+</body>
+</html>

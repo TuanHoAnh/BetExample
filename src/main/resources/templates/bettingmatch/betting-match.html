@@ -1,0 +1,326 @@
+<div class="content" xmlns:th="http://www.w3.org/1999/xhtml">
+    <div th:if="${bettingMatchId != null}" class="row">
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">[[#{betting.match.details}]]</h3>
+                </div>
+                <div class="box-body box-profile">
+                    <ul class="list-group" th:object="${bettingMatchForm}">
+                        <li class="list-group-item">
+                            <b>[[#{betting.match.name}]]</b>
+                            <a class="label label-primary pull-right"
+                               th:text="${competitor2}"></a>
+                            <a class="label label-danger pull-right"> vs </a>
+                            <a class="label label-primary pull-right"
+                               th:text="${competitor1}"></a>
+                        </li>
+                        <li class="list-group-item">
+                            <b>[[#{betting.match.balance}]]: </b> <a class="pull-right"
+                                                                     th:text="*{balance1} + ' - ' + *{balance2}"></a>
+                        </li>
+                        <li class="list-group-item">
+                            <b>[[#{betting.match.amount}]]: </b> <a class="pull-right" th:text="*{bettingAmount}"></a>
+                        </li>
+                        <li class="list-group-item">
+                            <b>[[#{betting.match.date}]]: </b> <a class="pull-right" th:text="*{date}"></a>
+                        </li>
+                        <li class="list-group-item">
+                            <b>[[#{betting.match.time}]]: </b> <a class="pull-right" th:text="*{time}"></a>
+                        </li>
+                        <li class="list-group-item">
+                            <b>[[#{betting.match.comment}]]: </b> <a class="pull-right" th:text="*{comment}"></a>
+                        </li>
+
+                        <a th:if="${moderatorId != null}" href="#" class="btn btn-info col-md-12 col-sm-12 col-xs-12"
+                           data-toggle="modal"
+                           data-target="#createBettingMatchModal"
+                           id="updateBettingMatchLink">[[#{betting.match.update}]]</a>
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div th:if="${moderatorId!=null}">
+        <div th:if="${bettingMatchForm.id == null}">
+            <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="info-box">
+                    <span class="info-box-icon bg-green"><i class="glyphicon glyphicon-plus"></i></span>
+                    <div class="info-box-content">
+                    <span class="info-box-text">
+                        <a href="#" data-toggle="modal" data-target="#createBettingMatchModal"
+                           id="createBettingMatchLink"><b>[[#{betting.match.create}]]</b></a>
+                    </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:if="${bettingMatchId == null}" class="col-md-9 col-sm-9 col-xs-12 pull-left">
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title">[[#{betting.match.table.header}]]</h3>
+            </div>
+            <div class="box-body table-responsive">
+                <table id="competitorView" class="table table-bordered table-hover dataTable" role="grid">
+                    <thead>
+                    <tr>
+                        <th>[[#{betting.match.table.datetime}]]</th>
+                        <th>[[#{betting.match.table.competitor1}]]</th>
+                        <th>[[#{betting.match.table.score}]]</th>
+                        <th>[[#{betting.match.table.competitor2}]]</th>
+                        <th>[[#{betting.match.table.location}]]</th>
+                        <th>[[#{betting.match.table.status}]]</th>
+                    </tr>
+                    </thead>
+                    <tbody id="competitor-table-body">
+                    <tr th:if="${moderatorId!=null}" th:each="bettingMatch : ${listBettingMatch}">
+                        <td class="col-md-2 col-sm-2 col-xs-12">
+                            <a th:text="${bettingMatch.expiryTime}"></a>
+                        </td>
+                        <td class="col-md-2 col-sm-2 col-xs-12">
+                            <img th:src="@{${bettingMatch.match.competitor1.logo}}"
+                                 class="img-circle" alt="competitor1-logo" width="30" height="30">
+                            <a th:text="${bettingMatch.match.competitor1.name}"></a>
+                        </td>
+                        <td class="col-md-1 col-sm-1 col-xs-12">
+                            <a th:text="${bettingMatch.match.score1 + '-' + bettingMatch.match.score2}"></a>
+                        </td>
+                        <td class="col-md-2 col-sm-2 col-xs-12">
+                            <img th:src="@{${bettingMatch.match.competitor2.logo}}"
+                                 class="img-circle" alt="competitor1-logo" width="30" height="30">
+                            <a th:text="${bettingMatch.match.competitor2.name}"></a>
+                        </td>
+                        <td class="col-md-3 col-sm-3 col-xs-12">
+                            <a th:text="${bettingMatch.match.location}"></a>
+                        </td>
+                        <td>
+                            <a>
+                                <p th:if="${bettingMatch.active == false}" class="label label-warning">
+                                    [[#{betting.match.status.inactive}]]</p>
+                                <p th:unless="${bettingMatch.active == false}" class="label label-success">
+                                    [[#{betting.match.status.active}]]</p>
+                            </a>
+                        </td>
+                        <td>
+                            <a th:href="'#/competitions/'+ ${aliasKey} + '/bettings/' + ${bettingGroupId} + '/matches/' + ${bettingMatch.id}"
+                               class="btn btn-info">[[#{betting.match.form.edit}]]</a>
+                        </td>
+                    </tr>
+
+                    <tr th:if="${players!=null}" th:each="bettingMatchActive : ${listBettingMatchActive}">
+                        <td class="col-md-2 col-sm-2 col-xs-12">
+                            <a th:text="${bettingMatchActive.expiryTime}"></a>
+                        </td>
+                        <td class="col-md-2 col-sm-2 col-xs-12">
+                            <img th:src="@{${bettingMatchActive.match.competitor1.logo}}"
+                                 class="img-circle" alt="competitor1-logo" width="30" height="30">
+                            <a th:text="${bettingMatchActive.match.competitor1.name}"></a>
+                        </td>
+                        <td class="col-md-1 col-sm-1 col-xs-12">
+                            <a th:text="${bettingMatchActive.match.score1 + '-' + bettingMatchActive.match.score2}"></a>
+                        </td>
+                        <td class="col-md-2 col-sm-2 col-xs-12">
+                            <img th:src="@{${bettingMatchActive.match.competitor2.logo}}"
+                                 class="img-circle" alt="competitor1-logo" width="30" height="30">
+                            <a th:text="${bettingMatchActive.match.competitor2.name}"></a>
+                        </td>
+                        <td class="col-md-3 col-sm-3 col-xs-12">
+                            <a th:text="${bettingMatchActive.match.location}"></a>
+                        </td>
+                        <td>
+                            <a>
+                                <p th:if="${bettingMatchActive.active == false}" class="label label-warning">
+                                    [[#{betting.match.status.inactive}]]</p>
+                                <p th:unless="${bettingMatchActive.active == false}" class="label label-success">
+                                    [[#{betting.match.status.active}]]</p>
+                            </a>
+                        </td>
+                        <td>
+                            <a th:href="'#/competitions/'+ ${aliasKey} + '/bettings/' + ${bettingGroupId} + '/matches/' + ${bettingMatchActive.id}"
+                               class="btn btn-info">[[#{betting.match.form.edit}]]</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div th:if="${moderatorId!=null}">
+        <div class="modal fade" id="createBettingMatchModal" role="dialog">
+            <div class="modal-dialog">
+                <form th:action="@{'/competitions/'+ ${aliasKey} + '/bettings/matches'}" id="createBettingMach"
+                      method="POST">
+                    <input type="hidden" id="publishSuccessMessage" th:value="#{betting.match.form.publish.success}">
+                    <input th:if="${bettingMatchForm.id == null}" type="hidden" id="SuccessMessage"
+                           th:value="#{betting.match.form.success}">
+                    <input th:unless="${bettingMatchForm.id == null}" type="hidden" id="SuccessMessage"
+                           th:value="#{betting.match.form.update.success}">
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <div th:if="${bettingMatchForm.id == null}">
+                                <h4 class="modal-title" th:text="#{betting.match.create}"></h4>
+                            </div>
+                            <div th:if="${bettingMatchForm.id != null}">
+                                <h4 class="modal-title" th:text="#{betting.match.update}"></h4>
+                            </div>
+                        </div>
+
+                        <div class="modal-body">
+                            <div id="match-content" th:fragment="info-content" th:object="${bettingMatchForm}">
+
+                                <div id="checkTimeAndActivate" class="form-group has-feedback"
+                                     th:classappend="${#fields.hasErrors('id')}?'has-error':''">
+                                    <input type="hidden" class="form-control" id="id" th:field="*{id}">
+                                    <span th:if="${#fields.hasErrors('id')}" th:errors="*{id}"
+                                          class="help-block"></span>
+                                </div>
+
+                                <div>
+                                    <label for="roundName" th:text="#{betting.match.round.name}"
+                                           class="required control-label"></label>
+                                    <div id="round" class="form-group has-feedback"
+                                         th:classappend="${#fields.hasErrors('round')} ? 'has-error' : ''">
+                                        <select class="form-control" id="roundName" th:field="*{round}">
+                                            <option th:each="round : ${listRound}" th:value="${round}"><p
+                                                th:text="${round}"></p>
+                                            </option>
+                                        </select>
+                                        <span th:if="${#fields.hasErrors('round')}" th:errors="*{round}"
+                                              class="help-block"></span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label for="name" th:text="#{betting.match.name}"
+                                           class="required control-label"></label>
+                                    <div id="matchId" class="form-group has-feedback"
+                                         th:classappend="${#fields.hasErrors('matchId')} ? 'has-error' : ''">
+                                        <select class="form-control" id="name" th:field="*{matchId}">
+                                            <option th:each="match : ${listBettingMatches}" th:value="${match.id}" th:text="${match.competitor1.name +' vs '+match.competitor2.name}"></option>
+                                        </select>
+                                        <span th:if="${#fields.hasErrors('matchId')}" th:errors="*{matchId}"
+                                              class="help-block"></span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label th:text="#{betting.match.balance}" class="required control-label"></label>
+                                    <div class="row">
+                                        <div class="col-xs-6">
+                                            <div id="balance1" class="form-group has-feedback"
+                                                 th:classappend="${#fields.hasErrors('balance1')} ? 'has-error' : ''">
+                                                <input type="text" min="0" class="form-control" id="bl1"
+                                                       th:field="*{balance1}" maxlength="6">
+                                                <span th:if="${#fields.hasErrors('balance1')}" th:errors="*{balance1}"
+                                                      class="help-block"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-6">
+                                            <div id="balance2" class="form-group has-feedback"
+                                                 th:classappend="${#fields.hasErrors('balance2')} ? 'has-error' : ''">
+                                                <input type="text" min="0" class="form-control" id="bl2"
+                                                       th:field="*{balance2} " maxlength="6">
+                                                <span th:if="${#fields.hasErrors('balance2')}" th:errors="*{balance2}"
+                                                      class="help-block"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label for="amount" th:text="#{betting.match.amount}"
+                                           class="required control-label"></label>
+                                    <div id="bettingAmount" class="form-group has-feedback"
+                                         th:classappend="${#fields.hasErrors('bettingAmount')} ? 'has-error' : ''">
+                                        <input type="text" class="preventzero form-control" id="amount"
+                                               th:field="*{bettingAmount}" maxlength="10">
+                                        <span th:if="${#fields.hasErrors('bettingAmount')}" th:errors="*{bettingAmount}"
+                                              class="help-block"></span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label th:text="#{betting.match.date}" class="required control-label"></label>
+                                    <div class="row">
+                                        <div class="col-xs-6">
+                                            <div id="date" class="form-group has-feedback"
+                                                 th:classappend="${#fields.hasErrors('date')} ? 'has-error' : ''">
+                                                <input type="text" class="form-control" id="datepicker"
+                                                       th:field="*{date}">
+                                                <span th:if="${#fields.hasErrors('date')}" th:errors="*{date}"
+                                                      class="help-block"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-6">
+                                            <div id="time" class="form-group has-feedback clockpicker"
+                                                 th:classappend="${#fields.hasErrors('time')} ? 'has-error' : ''">
+                                                <input type="text" class="form-control" id="timepicker"
+                                                       th:field="*{time}">
+                                                <span th:if="${#fields.hasErrors('time')}" th:errors="*{time}"
+                                                      class="help-block"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label for="comment" th:text="#{betting.match.comment}"></label>
+                                        <div id="comment" class="form-group has-feedback">
+                                            <input type="text" class="form-control" id="cm" th:field="*{comment}">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <input type="hidden" class="form-control" id="groupId" th:field="*{groupId}"
+                                       th:value="${bettingGroupId}">
+                                <input type="hidden" class="form-control" id="activate" th:field="*{activate}">
+                            </div>
+                            <input type="hidden" class="form-control" id="aliasKey" th:value="${aliasKey}">
+                            <div class="modal-footer">
+                                <button th:if="${publishButton!=true}" type="button" class="btn btn-primary"
+                                        th:text="#{betting.match.form.publish}"
+                                        id="activateBettingMatch"></button>
+                                <button type="submit" class="btn btn-primary"
+                                        th:text="#{betting.match.form.submit}"></button>
+                                <button type="button" class="btn btn-default" data-dismiss="modal"
+                                        th:text="#{betting.match.form.cancel}"></button>
+                            </div>
+
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+    <link href="/css/asterisk.css" rel="stylesheet" type="text/css">
+    <script th:src="@{/js/betting-match.js}"></script>
+    <script>
+        var groupId = "[[${bettingGroupId}]]";
+        if (groupId !== "") {
+            $("#groupId").val("[[${bettingGroupId}]]");
+        }
+        $(".preventzero").keyup(function () {
+            var value = $(this).val();
+            value = value.replace(/^(0*)/, "");
+            $(this).val(value);
+        });
+        $(function () {
+            //Date picker
+            $('#datepicker').datepicker({
+                autoclose: true,
+                format: "yyyy-mm-dd"
+            });
+            $('.clockpicker').clockpicker({
+                placement: 'top',
+                align: 'left',
+                autoclose: true
+            });
+        });
+    </script>
+</div>
+
+

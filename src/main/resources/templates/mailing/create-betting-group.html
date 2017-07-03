@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<!--
+  ~ Copyright ( C ) 2017. KMS Technology, Inc.
+  -->
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="#{createBettingGroup.email.content.title}">NgayThoBet Betting Group Notification</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<p th:text="#{email.greeting(${name})}">Dear [User],</p>
+<p th:text="#{createBettingGroup.email.content}">You was set as the moderator of group </p>
+    <a th:href="@{|${baseUrl}/#competitions/${competitionAliasKey}/bettings/${groupId}|}" th:text="|${groupName}|">|[[BettingGroupName]]|</a>
+<p>
+    <span th:text="#{email.greeting-end}">Regards,</span>
+    <br/>
+    <em th:text="#{email.signature}">NgayThoBet.</em>
+</p>
+</body>
+</html>

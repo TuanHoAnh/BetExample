@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<!--
+  ~ Copyright (c) 2017. KMS Technology, Inc.
+  -->
+
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <title layout:title-pattern="$LAYOUT_TITLE - $CONTENT_TITLE">NgayThoBet</title>
+    <th:block th:replace="fragments/head :: head"/>
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+    <header th:replace="fragments/header :: header"></header>
+    <aside th:replace="fragments/sidebar :: sidebar"></aside>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper" id="content-wrapper">
+        <!-- Content Header -->
+        <section id="main-header" class="content-header" layout:fragment="content-header">
+
+            <ol class="breadcrumb">
+                <li><a href="#"><i class="fa fa-dashboard"></i> Parent Page</a></li>
+                <li class="active">Current Page</li>
+            </ol>
+        </section>
+        <!-- Main content -->
+        <div id="main-content" class="content" layout:fragment="content-body"></div>
+
+    </div><!-- /.content-wrapper -->
+    <!--Create/Import Competition Popup-->
+    <div id="popup"></div>
+    <div id="import-popup"></div>
+    <!--Create/Update Competition Popup-->
+
+    <footer th:replace="fragments/footer :: footer"></footer>
+</div><!-- ./wrapper -->
+
+<th:block layout:fragment="extra-content"/>
+<th:block th:replace="fragments/javascript :: javascript"/>
+
+<th:block layout:fragment="updateBetJs"></th:block>
+<th:block layout:fragment="createModeratorJs"></th:block>
+<th:block layout:fragment="bettingmatchjs"></th:block>
+<th:block layout:fragment="changePasswordJs"></th:block>
+<th:block layout:fragment="createBettingGroupJs"></th:block>
+<th:block layout:fragment="competitionJs"></th:block>
+
+<th:block sec:authorize="hasRole('ROLE_ADMIN')" layout:fragment="jsAdmin">
+    <script>
+        $(document).ready(function () {
+
+            var token = $("meta[name='_csrf']").attr("content"),
+                header = $("meta[name='_csrf_header']").attr("content");
+
+            (function(){
+                $.ajax({
+                    beforeSend: function (request) {
+                        request.setRequestHeader(header, token);
+                    },
+                    url: '/competitions/xxx/bettings/count-pending-groups',
+                    type: 'GET',
+                    success: function (data) {
+                        $('#numberRequestsApprove').text(data.data);
+                    },
+                    error: function (e) {
+                        console.log("Error when get count pending groups: ", e);
+                    }
+                });
+            })();
+        });
+
+    </script>
+</th:block>
+</body>
+</html>

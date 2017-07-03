@@ -1,0 +1,345 @@
+<div xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+     xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+     xmlns="http://www.w3.org/1999/xhtml">
+    <section class="content-header" layout:fragment="content-header">
+    </section>
+    <div class="content" layout:fragment="content-body">
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12 distance-bottom">
+                <div class="pull-right">
+                    <div class="match-competitor">
+                        <span sec:authorize="hasRole('ROLE_ADMIN')">
+                            <button id="addNewMatchPopup" type="submit"
+                                 class="btn btn-default">[[#{match.form.addnew}]]</button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <div class="row">
+        <div class="col-md-3 col-sm-5 col-xs-12">
+            <div class="box box-primary">
+                <div class="box-body box-profile">
+                    <img class="profile-user-img img-responsive img-circle"
+                         id="logo-competition" alt="Competition Image"
+                         th:src="${competitionForm.logo}?:'/images/worldcup.jpg'"><hr>
+
+                    <div>
+                        <strong class="box-left-element overflow">[[#{competition.name}]] :</strong>
+                        <p class="box-right-element text-muted pull-right overflow" th:text="${competitionForm.name}"></p>
+                    </div><hr>
+
+                    <div>
+                        <strong class="box-left-element overflow">[[#{competition.competitors}]] :</strong>
+                        <p class="box-right-element text-muted pull-right overflow" th:text="${competitionForm.numberOfCompetitor}"></p>
+                    </div><hr>
+
+                    <div>
+                        <strong class="box-left-element overflow">[[#{competition.rounds}]] :</strong>
+                        <p class="box-right-element text-muted pull-right overflow" th:text="${competitionForm.rounds.size()}"></p>
+                    </div><hr>
+
+                    <div>
+                        <strong class="box-left-element overflow">[[#{competition.matches}]] :</strong>
+                        <p class="box-right-element text-muted pull-right overflow" th:text="${competitionForm.numberOfMatch}"></p>
+                    </div><hr>
+
+                    <input hidden="hidden" id="competition-id" th:value="${competitionForm.id}"/>
+                    <input hidden="hidden" id="competitonAliasKey" th:value="${competitionForm.aliasKey}"/>
+                    <input hidden="hidden" id="viewCompetitonId" th:value="${competitionForm.id}"/>
+
+                    <div class="row no-margin">
+                        <form sec:authorize="hasRole('ROLE_ADMIN')" id="publishCompetitionForm"
+                              th:attr="data-publish-success-message=#{competition.published.success}"
+                              th:attrappend="data-publish-fail-message=#{competition.published.fail}"
+                        >
+                            <input type="hidden" id="competition-name" th:value="${competitionForm.name}"/>
+                            <div class="box-button col-lg-12 col-md-12">
+                                <a th:if="${competitionForm.status.toString() != 'PUBLISHED'}">
+                                    <button
+                                        id="btn-publish-competition" type="submit" method="POST"
+                                        class="btn btn-primary custom-action-button overflow"
+                                        th:action="@{/competitions/publish}"
+                                    >
+                                        <span th:text="#{competition.form.publish}"></span>
+                                    </button>
+                                </a>
+                            </div>
+                        </form>
+
+                        <div sec:authorize="hasRole('ROLE_ADMIN')" class="box-button col-lg-12 col-md-12">
+                            <a class="btn btn-default custom-action-button overflow"
+                               th:href="@{'#/competitions/' + ${competitionForm.aliasKey} + '/update'}"
+                               th:text="#{competition.form.update}">
+                            </a>
+                        </div>
+
+                        <div class="box-button col-lg-12 col-md-12">
+                            <a id="showPopup" href="#" class="btn btn-success custom-action-button overflow"
+                               role="button" data-toggle="modal" data-target="#createModeratorRequest"
+                               th:text="#{betting-group.mod-request.title}">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div sec:authorize="hasRole('ROLE_ADMIN')" class="box box-primary" th:object="${groupsInfo}">
+                <div class="box-body">
+                    <div>
+                        <strong class="box-left-element overflow" th:text="#{competition.groups-info.total-groups}"></strong>
+                        <p class="box-right-element text-muted pull-right overflow" th:text="*{totalGroupsCount}"></p>
+                    </div><hr>
+
+                    <div>
+                        <strong class="box-left-element overflow" th:text="#{competition.groups-info.published-groups}"></strong>
+                        <p class="box-right-element text-muted pull-right overflow" th:text="*{publishedGroupsCount}"></p>
+                    </div><hr>
+
+                    <div>
+                        <strong class="box-left-element overflow" th:text="#{competition.groups-info.draft-groups}"></strong>
+                        <p class="box-right-element text-muted pull-right overflow" th:text="*{draftGroupsCount}"></p>
+                    </div><hr>
+
+                    <div>
+                        <strong class="box-left-element overflow" th:text="#{competition.groups-info.pending-groups}"></strong>
+                        <p class="box-right-element text-muted pull-right overflow" th:text="*{pendingGroupsCount}"></p>
+                    </div><hr>
+
+                    <div>
+                        <div class="box-button col-xs-12 col-sm-12 col-md-12 col-lg-6">
+                            <button type="submit"
+                                    th:action="@{/competitions}" id="createBettingGroupButton" method="POST"
+                                    class="btn btn-primary custom-action-button overflow" data-toggle="modal"
+                                    data-target="#createBettingGroupPopup"
+                            >
+                                <span th:text="#{competition.groups-info.create-group}"></span>
+                            </button>
+                        </div>
+
+                        <div class="box-button col-xs-12 col-sm-12 col-md-12 col-lg-6">
+                            <a class="btn btn-default custom-action-button overflow"
+                               th:text="#{competition.groups-info.group-management}">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="box box-primary">
+                <div class="box-header" sec:authorize="hasRole('ROLE_ADMIN')">
+                    <div class="match-competitor pull-right">
+                        <a href="#" class="btn btn-primary overflow"
+                           data-toggle="modal" data-target="#competitorModal"
+                           th:text="#{competitor.form.createnew}">
+                        </a>
+                    </div>
+                </div>
+
+                <div class="box-body" id="competitorListBlock" >
+                    <div th:replace="competitor :: competitorsList"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-9 col-sm-7 col-xs-12">
+            <div class="box box-primary" th:each="element : ${matchRounds}" th:id="${element.name}">
+                <div class="box-header">
+                    <p class="box-title" th:text="|${element.name} #{match.round}|">keyvalue</p>
+                </div>
+                <div class="box-body overflow">
+                    <table id="matchView" class="table table-bordered table-hover dataTable table-striped" role="grid">
+                        <colgroup>
+                            <col class="fixed-datetime-column" />
+                            <col class="fixed-competitor-column" />
+                            <col class="fixed-score-column" />
+                            <col class="fixed-competitor-column" />
+                            <col class="fixed-location-column" />
+                        </colgroup>
+                        <thead>
+                        <tr>
+                            <th>[[#{match.datetime}]]</th>
+                            <th>[[#{match.competitor1}]]</th>
+                            <th>[[#{match.score}]]</th>
+                            <th>[[#{match.competitor2}]]</th>
+                            <th>[[#{match.location}]]</th>
+                            <th sec:authorize="hasRole('ROLE_ADMIN')"></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="match : ${element.matchList}" th:id="'match-' + ${match.id}">
+                                <td th:text="|${match.startTime.toLocalDate()} ${match.startTime.toLocalTime()}|"></td>
+                                <td><img th:src="@{${match.competitor1.logo}}" class="imge-bordered-sm flagCompetitor" alt="#" ><span th:text="| - ${match.competitor1.name}|"></span></td>
+                                <td th:if="${match.score1 != null and match.score2 != null}">
+                                    <a sec:authorize="hasRole('ROLE_ADMIN')"
+                                       th:href="@{#}" th:text="|${match.score1} - ${match.score2}|" th:attr="data-match-id=${match.id}"
+                                       name="score" data-toggle="modal" data-target="#updateMatchScoreModal">
+                                    </a>
+                                    <p sec:authorize="hasRole('ROLE_USER')" th:text="|${match.score1} - ${match.score2}|"></p>
+                                </td>
+                                <td th:if="${match.score1 == null and match.score2 == null}">
+                                    <a name="score" sec:authorize="hasRole('ROLE_ADMIN')"
+                                       th:href="@{#}" th:text="|? - ?|" th:attr="data-match-id=${match.id}"
+                                       data-toggle="modal" data-target="#updateMatchScoreModal">
+                                    </a>
+                                    <p sec:authorize="hasRole('ROLE_USER')" th:text="|? - ?|"></p>
+                                </td>
+                                <td th:if="${match.score1 == null and match.score2 != null}">
+                                    <a name="score" sec:authorize="hasRole('ROLE_ADMIN')"
+                                       th:href="@{#}" th:text="|? - ${match.score2}|" th:attr="data-match-id=${match.id}"
+                                       data-toggle="modal" data-target="#updateMatchScoreModal">
+                                    </a>
+                                    <p sec:authorize="hasRole('ROLE_USER')" th:text="|? - ${match.score2}|"></p>
+                                </td>
+                                <td th:if="${match.score1 != null and match.score2 == null}">
+                                    <a name="score" sec:authorize="hasRole('ROLE_ADMIN')"
+                                       th:href="@{#}" th:text="|${match.score1} - ?|" th:attr="data-match-id=${match.id}"
+                                       data-toggle="modal" data-target="#updateMatchScoreModal">
+                                    </a>
+                                    <p sec:authorize="hasRole('ROLE_USER')" th:text="|${match.score1} - ?|"></p>
+                                </td>
+                                <td><img th:src="@{${match.competitor2.logo}}" class="imge-bordered-sm flagCompetitor" alt="#" ><span th:text="| - ${match.competitor2.name}|"></span></td>
+                                <td th:text="${match.location}"></td>
+                                <td sec:authorize="hasRole('ROLE_ADMIN')">
+                                    <form th:action="@{/competitions}" id="updateMatch" class="updateMatchForm"
+                                          method="POST">
+                                        <input hidden="hidden" name="matchId" type="text" th:value="${match.id}"/>
+                                        <button type="submit" class="btn btn-default pull-right" hidden>[[#{match.form.update}]]</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        <script>
+            $('.updateMatchForm').on('submit', function (event) {
+                event.preventDefault();
+                var token = $("meta[name='_csrf']").attr("content");
+                var header = $("meta[name='_csrf_header']").attr("content");
+                var aliasKey = $("#competitonAliasKey").val();
+                var matchIdUpdate = $(this).find("input[name='matchId']").val();
+                var data = {
+                    "aliasKey": aliasKey,
+                    "id": matchIdUpdate
+                };
+
+                $.ajax({
+                    type: 'GET',
+                    contentType: 'charset=utf-8',
+                    beforeSend: function (request) {
+                        request.setRequestHeader(header, token);
+                    },
+                    url: '/competitions/' + aliasKey + '/createMatchPopup',
+                    data: data,
+                    success: function (responseData) {
+                        $('#createMatchPopup').html(responseData);
+                        $('#createMatchModal').modal('show');
+
+                    },
+                    fail: function (e) {
+                        console.log(e);
+                    },
+                    error: function (e) {
+                        console.log(e);
+                    }
+                });
+
+            });
+        </script>
+        </div>
+        <div id="createMatchPopup"></div>
+        <div id="createBettingGroupPopup"
+             class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <form th:action="@{/competitions/{competitionAliasKey}/bettings/create}" id="createBettingGroupForm"
+                      method="POST">
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title" th:text="#{createBettingGroup.form.title}"></h4>
+                        </div>
+                        <div class="modal-body" id="bettingGroupModalBody">
+                            <div th:fragment="create-betting-group" id="createBettingGroupFragment">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" id="submitBettingGroup" class="btn btn-primary"
+                                    th:text="#{createBettingGroup.form.save}"></button>
+                            <button type="button" id="cancelBettingGroup" class="btn btn-default" data-dismiss="modal"
+                                    th:text="#{createBettingGroup.form.cancel}"></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div th:replace="update-match-score :: update-match-score"></div>
+        <div layout:insert="competitor::competitor-content"></div>
+
+        <script>
+            $(document).ready(function () {
+                $('[id="matchView"]').DataTable({
+                    responsive: true,
+                    oLanguage: {
+                        sSearch: "Filter records:"
+                    }
+                });
+            })
+        </script>
+        <!-- request Modal -->
+        <div class="modal fade" id="createModeratorRequest" role="dialog">
+            <div class="modal-dialog">
+        <form th:action="@{'/competitions/' + ${aliasKey} + '/bettings/submit-request'}"
+                  id="createModeratorRequestForm"
+                  method="POST" name="createModeratorRequestForm">
+                <!-- Modal content-->
+                <div class="modal-content">
+                        <div id="responseReplace" th:fragment="createModeratorRequestFragment"
+                             th:object="${createModeratorRequestForm}">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title"><b th:text="#{betting-group.mod-request.title}"></b></h4>
+                            </div>
+                            <div class="modal-body">
+                                <b th:text="#{betting-group.group-name}"></b>
+                                <div class="form-group has-feedback" id="bettingGroupNameDiv"
+                                     th:classappend="${#fields.hasErrors('bettingGroupName')} ? 'has-error' : ''">
+                                    <input type="text" th:field="*{bettingGroupName}" class="form-control"
+                                           id="bettingGroupName" maxlength="10">
+                                    <input type="hidden" id="competitionId" th:field="*{competitionId}">
+                                    <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+                                    <span th:if="${#fields.hasErrors('bettingGroupName')}"
+                                          th:errors="*{bettingGroupName}"
+                                          class="help-block"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                    <div class="modal-footer">
+                        <input type="hidden" name="successMessage" id="successMessage" th:value="#{betting-group.submit.success}">
+                        <button type="submit" class="btn btn-primary"
+                                th:text="#{betting-group.form.submit}"></button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal" id="cancel"
+                                th:text="#{betting-group.form.cancel}"></button>
+                    </div>
+                </div>
+        </form>
+    </div>
+    <th:block layout:fragment="extra-content">
+
+    </th:block>
+
+    <th:block layout:fragment="js">
+        <script th:inline="javascript">
+            $('table.table tr').click(function () {
+            });
+        </script>
+        <script th:inline="javascript" th:src="@{/js/create-match.js}"></script>
+        <script th:inline="javascript" th:src="@{/js/create-group.js}"></script>
+    </th:block>
+</div>
+    </div>
+</div>

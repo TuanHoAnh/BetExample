@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<!--
+  ~ Copyright (c) 2017. KMS Technology, Inc.
+  -->
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="#{email.bettinggroup.new.mail.title}">New Betting Group</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+<p th:text="#{email.greeting(${name})}">Dear [User],</p>
+<div th:text="${moderator}"></div>
+<p th:text="#{email.bettinggroup.new.mail.invite.player}">Invited you.</p>
+<b>
+    <a th:text="@{|${baseUrl}/user/register|}" th:href="@{|${baseUrl}/user/register|}"></a>
+</b>
+
+<p>
+    <span th:text="#{email.greeting-end}">Regards,</span>
+    <br/>
+    <em th:text="#{email.signature}">NgayThoBet.</em>
+</p>
+</body>
+</html>

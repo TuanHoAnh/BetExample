@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<!--
+  ~ Copyright (c) 2017. KMS Technology, Inc.
+  -->
+
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layouts/nonav">
+<head>
+    <title>Validate Account</title>
+    <link rel="stylesheet" th:href="@{/webjars/adminlte/2.3.11/plugins/iCheck/square/blue.css}">
+    <link rel="stylesheet" th:href="@{/static/css/app.css}">
+</head>
+<body>
+<div th:if="${status!=null}" layout:fragment="content">
+    <h3 th:align="center">[[#{activate.title}]]</h3>
+    <div th:if="${status.name() == 'ACTIVATE_SUCCESS'}" th:text="#{activate.success}" class="alert alert-success"></div>
+    <div th:if="${status.name() == 'EXPIRED'}" th:text="#{activate.expired}" class="alert alert-error"></div>
+    <div th:if="${status.name() == 'TOKEN_NOT_FOUND'}" th:text="#{activate.token.notfound}" class="alert alert-error"></div>
+    <a th:href="@{/signin}" th:text="#{activate.homepagelink}"></a>
+</div>
+</body>
+</html>

@@ -1,0 +1,173 @@
+/*
+ * Copyright (c) 2017. KMS Technology, Inc.
+ */
+section.content-header {
+    padding-top: 0;
+}
+
+.logo-image {
+    width: 80px;
+    height: 40px;
+    padding: 0 10px 5px 0;
+}
+
+.nonav-page {
+    background: #d2d6de;
+}
+
+.nonav-box {
+    width: 360px;
+    margin: 7% auto;
+}
+
+.nonav-logo {
+    font-size: 35px;
+    text-align: center;
+    margin-bottom: 25px;
+    font-weight: 300;
+}
+
+.nonav-box-msg {
+    margin: 0;
+    text-align: center;
+    padding: 0 20px 20px 20px;
+}
+
+.nonav-box-body {
+    background: #fff;
+    padding: 20px;
+    border-top: 0;
+    color: #666;
+}
+
+.game-rules-title {
+    float: left;
+    max-width: 180px;
+    margin: 0;
+    padding: 1em;
+}
+
+.game-rules-content {
+    margin-left: 180px;
+    max-width: 700px;
+    padding: 1em;
+    overflow: hidden;
+}
+
+.callout.callout-info {
+    margin-bottom: 0!important;
+    background-color: #f5dd7f  !important;
+    color: #382323 !important;
+    font-size: 16px;
+    position: relative;
+}
+
+.flexnav {
+    -webkit-padding-start: 0;
+    -webkit-margin-before: 0;
+    -webkit-margin-after: 0;
+    margin-top: 0;
+    margin-right: auto;
+    margin-bottom: 0;
+    width: 90%;
+    position: absolute;
+    z-index: 10;
+    margin-left: 15px;
+}
+
+.widthsize{
+    max-width: 200px;
+    display: inline-block;
+}
+
+.num-size {
+    width: 80px;
+    margin: 0;
+    padding: 0;
+}
+
+.sm-minus {
+    width: 40px;
+}
+
+.add-dropdown-default {
+    z-index: 999;
+    right: 0;
+    margin-right: 17px;
+    padding-top: 7px;
+}
+
+.add-dropdown {
+    position: absolute;
+}
+
+.add-dropdown-collapse {
+    padding-left: 15px;
+}
+
+.inline-sidebar-header{
+    position: relative;
+    display: inline-block;
+    display: -moz-inline-stack;
+}
+.import-modal{
+    padding: 15px;
+}
+
+.badge{
+    cursor: pointer;
+}
+
+.loader {
+    width: 80px;
+    height: 80px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    padding: 2px;
+}
+.required.control-label:after{
+    color: red;
+    content: "*";
+    position: relative;
+    margin-left: 5px;
+}
+
+
+.content-wrapper p {
+    margin-left: 5px;
+    padding: 0 10px;
+    font-size: 16px;
+    position: relative;
+    z-index: 30;
+}
+.width-size{
+    max-width: 265px;
+}
+.box-score{
+    color: blanchedalmond;
+}
+
+.circle-btn {
+    border-radius: 50%;
+}
+
+section.content-header {
+    padding-top: 15px;
+}
+.modal-dialog.width-create-match{
+    width: 700px;
+}
+.width-addon{
+    width: 14px;
+}
+
+.overflow {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#group-content.tab-content {
+    background: #dcebf3;
+}

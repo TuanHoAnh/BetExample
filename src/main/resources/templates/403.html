@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<!--
+  ~ Copyright (c) 2017. KMS Technology, Inc.
+  -->
+
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layouts/main">
+<head>
+    <title>Oops! That's an error</title>
+</head>
+<body>
+
+<section layou  th:fragment="content-header"></section>
+
+<section th:fragment="content-body">
+    <div class="error-page">
+        <h2 class="headline text-yellow"> 403</h2>
+
+        <div class="error-content">
+            <h3><i class="fa fa-warning text-yellow"></i> Oops! Forbidden Error.</h3>
+            <p>
+                We are sorry, but you do not have access to this page.
+                Meanwhile, you may <a th:href="@{/}">return to dashboard</a>.
+            </p>
+        </div>
+    </div>
+</section>
+
+</body>
+</html>

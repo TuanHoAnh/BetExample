@@ -1,0 +1,230 @@
+<div class="modal fade" id="createMatchModal" role="dialog" xmlns:th="http://www.w3.org/1999/xhtml">
+    <div class="modal-dialog width-create-match">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i
+                    class="fa fa-times"></i></button>
+                <div th:switch="${createMatchForm.id}" class="modal-title">
+                    <h4 th:case="null" th:text="#{match.form.addnew}"></h4>
+                    <h4 th:case="*" th:text="#{match.form.editmatch}"></h4>
+                </div>
+            </div>
+            <form th:fragment="creatematch-info" th:object="${createMatchForm}" method="POST"
+                  class="form-horizontal" id="createMatchForm" th:attr="data-success=#{match.save}">
+
+                <div class="modal-body">
+                    <div class="box-body bg-info">
+                        <div class="row form-group" id="matchCompetitors"
+                             th:classappend="${#fields.hasErrors('competitor1Id')}?'has-error':''">
+                            <div class="col-md-4">
+                                <select class="form-control competitor-name" id="selectTeamA" name="competitor1Id">
+                                    <option th:each="competitor : ${listCompetitors}" th:text="${competitor.name}"
+                                            th:value="${competitor.id}"
+                                            th:selected="${competitor.id==createMatchForm.competitor1Id}"></option>
+                                </select>
+                            </div>
+                            <div class="col-md-4"
+                                 th:classappend="${#fields.hasErrors('score1')||#fields.hasErrors('score2')}?'has-error':''">
+                                <div class="col-md-6 text-red">
+                                    <input type="number" th:max="1000" name="score1" class="form-control text-center"  id="scoreA"
+                                           min="0"
+                                           placeholder="?" th:value="${createMatchForm.score1}"/>
+                                </div>
+                                <div class="col-md-6 text-red">
+                                    <input type="number" th:max="1000" name="score2" class="form-control text-center" id="scoreB"
+                                           min="0"
+                                           placeholder="?" th:value="${createMatchForm.score2}"/>
+                                </div>
+                            </div>
+                            <div class="col-md-4" th:classappend="${#fields.hasErrors('competitor2Id')}?'has-error':''">
+                                <select class="form-control competitor-name" id="selectTeamB" name="competitor2Id">
+                                    <option th:each="competitor : ${listCompetitors}" th:text="${competitor.name}"
+                                            th:value="${competitor.id}"
+                                            th:selected="${competitor.id==createMatchForm.competitor2Id}"></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row form-group" align="center">
+                         <span class="text-red">
+                             <div th:if="${#fields.hasErrors('competitor1Id')}"
+                                  th:text="${#fields.errors('competitor1Id').get(0)}"></div>
+                             <div th:if="${#fields.hasErrors('competitor2Id')}"
+                                  th:text="${#fields.errors('competitor2Id').get(0)}"></div>
+                             <div th:if="${#fields.hasErrors('score1')}"
+                                  th:text="${#fields.errors('score1').get(0)}"></div>
+                             <div th:if="${#fields.hasErrors('score2')}"
+                                  th:text="${#fields.errors('score2').get(0)}"></div>
+                         </span>
+
+
+                        </div>
+                    </div>
+
+
+                    <div class="box-body bg-gray-light">
+                    <div class="row form-group" align="left">
+                        <div class="col-md-5 " id="matchRound"
+                             th:classappend="${#fields.hasErrors('round')}?'has-error':''">
+                            <label class="required control-label">[[#{match.round}]]</label>
+                            <div class="input-group">
+                                <span class="input-group-addon"> <span class="fa fa-fw fa-object-group width-addon"></span></span>
+                                <select class="form-control width-size" id="roundsSelect" name="round">
+                                    <option th:each="round : ${listRounds}" th:text="${round}"
+                                            th:value="${round}"
+                                            th:selected="${round==createMatchForm.round}"></option>
+                                </select>
+                            </div>
+
+                        </div>
+                        <span class="col-md-2"></span>
+
+                        <div class="col-md-5" id="matchLocation"
+                             th:classappend="${#fields.hasErrors('round')}?'has-error':''">
+                            <label class="control-label">[[#{match.location}]]</label>
+                            <div class="input-group">
+                                <span class="input-group-addon "><span class="fa fa-fw fa-location-arrow width-addon"></span></span>
+                                <input type="text" th:maxlength="30" name="location" id="match-location-input"
+                                       class="form-control width-size"
+                                       th:placeholder="#{match.location}" th:value="${createMatchForm.location}"/>
+                            </div>
+
+
+                        </div>
+
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-5">
+                            <span class="text-red">
+                                <div th:if="${#fields.hasErrors('round')}"
+                                     th:text="${#fields.errors('round').get(0)}" class="text-red"></div>
+                            </span>
+                        </div>
+                        <span class="col-md-2"></span>
+                        <div class="col-md-5"></div>
+                    </div>
+
+                    <div class="row form-group">
+
+                        <div class="col-md-5" id="matchDate"
+                             th:classappend="${#fields.hasErrors('matchDate')}?'has-error':''">
+                            <b class="required control-label" th:text="#{match.date}"></b>
+                            <div class="input-group datepicker no-padding">
+                                <span class="input-group-addon">
+                                    <span class="fa fa-calendar"></span>
+                                </span>
+                                <input type="text" name="matchDate" id="datepicker"
+                                       class="form-control width-size"
+                                       th:value="${createMatchForm.matchDate}"/>
+                            </div>
+                        </div>
+                        <span class="col-md-2"></span>
+                        <div class="col-md-5" id="matchTime"
+                             th:classappend="${#fields.hasErrors('matchTime')}?'has-error':''">
+                            <b class="required control-label" th:text="#{match.time}"></b>
+                            <div class="input-group clockpicker">
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-time"></span>
+                                </span>
+                                <input type="text" name="matchTime" id="match-time-input"
+                                       class="form-control width-size"
+                                       th:value="${createMatchForm.matchTime}"/>
+                            </div>
+                        </div>
+
+                        <input hidden="hidden" th:if="${createMatchForm.id}" id="updateMatchId"
+                               th:value="${createMatchForm.id}" name="id"/>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-5">
+                            <span class="text-red">
+                            <div th:if="${#fields.hasErrors('matchDate')}"
+                                th:text="${#fields.errors('matchDate').get(0)}" class="text-red"></div>
+                            </span>
+                        </div>
+                        <span class="col-md-2"></span>
+                        <div class="col-md-5">
+                            <span class="text-red">
+                            <div th:if="${#fields.hasErrors('matchTime')}"
+                                th:text="${#fields.errors('matchTime').get(0)}" class="text-red"></div>
+                            </span>
+                        </div>
+                    </div>
+                    </div>
+                    <input hidden="hidden" name="competitionId" th:value="${competitionId}"/>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">[[#{competition.button.create}]]</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        [[#{competition.button.cancel}]]
+                    </button>
+                </div>
+                <script>
+                    $(function () {
+                        //Date picker
+                        $('#datepicker').datepicker({
+                            autoclose: true,
+                            format: "yyyy-mm-dd"
+                        });
+                        $('.clockpicker').clockpicker({
+                            placement: 'top',
+                            align: 'left',
+                            autoclose: true
+                        });
+                    });
+                    $('#createMatchForm').on('submit', function (event) {
+                        event.preventDefault();
+                        $('#matchCompetitors').removeClass('has-error').find('span').remove();
+                        $('#matchRound').removeClass('has-error').find('span').remove();
+                        $('#matchDate').removeClass('has-error').find('span').remove();
+                        $('#matchTime').removeClass('has-error').find('span').remove();
+                        $('#matchLocation').removeClass('has-error').find('span').remove();
+                        $('#error-contain').hide();
+                        $('#error-content').html('');
+
+                        var aliasKey = $("#competitonAliasKey").val();
+                        var token = $("meta[name='_csrf']").attr("content");
+                        var header = $("meta[name='_csrf_header']").attr("content");
+
+                        $.ajax({
+                            type: 'POST',
+                            beforeSend: function (request) {
+                                request.setRequestHeader(header, token);
+                            },
+                            url: '/competitions/' + aliasKey + '/createMatch',
+                            data: $('#createMatchForm').serialize(),
+                            success: function (response) {
+                                if ($(response).find('.has-error').length > 0) {
+                                    $('#createMatchForm').replaceWith(response);
+                                    $('#error-contain').removeAttr('hidden');
+
+                                } else {
+                                    $('#createMatchModal').modal('hide');
+                                    toastr.success($("#createMatchForm").data("success"), "Success");
+                                    setTimeout(function () {
+                                        var aliasKey = $("#competitonAliasKey").val();
+                                        loadContent('/competitions/' + aliasKey);
+                                        $('#createMatchPopup').html('');
+                                    }, 400)
+                                }
+
+                            },
+                            fail: function (e) {
+                                console.log(e);
+                            },
+                            error: function (e) {
+                                console.log(e);
+                            }
+                        });
+                    });
+
+                </script>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+

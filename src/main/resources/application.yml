@@ -1,0 +1,102 @@
+app:
+    upload-dir: ./files
+    mail-sender: NgayThoBet<kmstechnologyexample@gmail.com>
+    host-domain: http://localhost:8080
+    async-info:
+        core-pool-size: 4
+        max-pool-size: 64
+        queue-capacity: 100000
+    api-info:
+        title: NgayThoBet API
+        description: REST-ful APIs documentation for NgayThoBet
+        version: @project.version@
+        contact: trungnguyen@kms-technology.com
+        license: Copyright (c) 2017 KMS Technology, Inc.
+    activation-expire-seconds: 604800
+    reset-expire-seconds: 86400
+    request-approve-betting-groups:
+        page-size: 10
+spring:
+    thymeleaf:
+        mode: HTML
+        cache: false
+
+    messages:
+        basename: i18n/messages, i18n/validations
+
+    datasource:
+        url: jdbc:postgresql://localhost:5432/ngaythobet
+        username: ngaythobet
+        password: ngaythobet@123
+        driver-class-name: org.postgresql.Driver
+
+    jpa:
+        hibernate.ddl-auto: validate
+
+    data:
+        mongodb:
+            uri: mongodb://localhost:27017/ngaythobet
+
+    mail:
+        host: smtp.gmail.com
+        port: 587
+        username: kmstechnologyexample@gmail.com
+        password: Admin@123AS
+        properties:
+            mail.transport.protocol: smtp
+            mail.smtp.auth: true
+            mail.smtp.starttls.enable: true
+
+server:
+    port: 8080
+
+logging:
+    file: logs/ngaythobet.log
+    level:
+        root: WARN
+        vn.kms.ngaythobet: DEBUG
+
+security:
+    oauth2:
+        client:
+            client-id: acme
+            client-secret: acmesecret
+            scope: read,write
+            auto-approve-scopes: '.*'
+            access-token-validity-seconds: 30
+
+facebook:
+    client:
+        clientId: 223066761504313
+        clientSecret: 3780d6a17bb982510a581c0ee49521d6
+        accessTokenUri: https://graph.facebook.com/oauth/access_token
+        userAuthorizationUri: https://www.facebook.com/dialog/oauth
+        tokenName: oauth_token
+        authenticationScheme: query
+        clientAuthenticationScheme: form
+        scope:
+            - email
+            - public_profile
+    resource:
+        userInfoUri: https://graph.facebook.com/me?fields=email,first_name,last_name
+
+google:
+    client:
+        clientId: 319281610799-uhfktar13imrkhohlhe09k8seubh9v0t.apps.googleusercontent.com
+        clientSecret: KS9ChKlYGjqVbHjcPSLaG3o0
+        accessTokenUri: https://www.googleapis.com/oauth2/v4/token
+        userAuthorizationUri: https://accounts.google.com/o/oauth2/v2/auth
+        clientAuthenticationScheme: form
+        scope:
+            - openid
+            - email
+            - profile
+    resource:
+        userInfoUri: https://www.googleapis.com/oauth2/v3/userinfo
+        preferTokenInfo: true
+
+ngaythobet:
+    competitor-logo: /images/default/competitor-logo.jpg
+    user-avatar: /images/user.jpg
+    logo-dir: src/main/resources/static/images/competitions
+    football-token: 029812a58dcd467b8ce31b8d88e6059d

@@ -1,0 +1,115 @@
+<div xmlns:th="http://www.thymeleaf.org"
+     xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" th:remove="tag">
+    <meta th:name="football_token" th:content="${footballToken}"/>
+    <div class="modal fade" id="autoImportCompetitionModal" role="dialog">
+        <div th:fr class="modal-dialog">
+            <div class="modal-content  import-modal">
+                <div class="modal-header">
+                    <button type="button" class="close import-popup" data-dismiss="modal" aria-hidden="true"><i
+                        class="fa fa-times"></i></button>
+                    <a><h4 class="modal-title" th:text="#{competition.import.title}"></h4></a>
+                </div>
+                <div class="modal-body">
+                    <form th:fragment="import-info" action="/competitions/auto-import" th:object="${importForm}"
+                          method="POST"
+                          class="form-horizontal" id="autoImportCompetitionForm" >
+
+                        <div th:if="${importFail != null && messageKey != null}">
+                            <div class="success-toastr" th:if="${importFail == false}"></div>
+                            <div class="error-toastr" th:if="${importFail == true}"></div>
+                            <div id="import-toastr-message" th:switch="${messageKey}">
+                                <div th:case="0" th:attr="data-message=#{import.success.message}"></div>
+                                <div th:case="1" th:attr="data-message=#{import.validation.not-exist-competition-name}"></div>
+                                <div th:case="2" th:attr="data-message=#{import.fail.error.message}"></div>
+                                <div th:case="3" th:attr="data-message=#{import.fail.timeout.message}"></div>
+                            </div>
+                        </div>
+
+                        <div id="autoImportCompetitionKey" class="form-group has-feedback"
+                             th:classappend="${#fields.hasErrors('aliasKey')}?'has-error':''">
+                            <div class="input-padding">
+                                <label class="control-label required">[[#{competition.alias}]]</label>
+                                <div>
+                                    <input type="text" name="aliasKey" id="auto-import-comp-key-input"
+                                           class="form-control"
+                                           th:placeholder="#{competition.alias}" th:value="*{aliasKey}"/>
+                                </div>
+                                <span th:if="${#fields.hasErrors('aliasKey')}"
+                                      th:text="${#fields.errors('aliasKey').get(0)}" class="help-block"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group has-feedback"
+                             th:classappend="${#fields.hasErrors('competitionId')}?'has-error':''">
+                            <div class="input-padding">
+                                <label class="control-label required">[[#{import.year.label}]]</label>
+                                <select id="importYear" class="form-control">
+                                    <option selected disabled>[[#{import.year.select}]]</option>
+                                    <script>
+                                        var myDate = new Date();
+                                        var year = myDate.getFullYear();
+                                        for (var selectYear = 2015; selectYear < year + 1; selectYear++) {
+                                            $('#importYear').append('<option value="' + selectYear + '">' + selectYear + '</option>');
+                                        }
+                                    </script>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group has-feedback"
+                             th:classappend="${#fields.hasErrors('competitionName')}?'has-error':''">
+                            <div class="input-padding">
+                                <label class="control-label required">[[#{import.competition.label}]]</label>
+                                <select id="competitionsYear" class="form-control">
+                                    <option selected disabled>[[#{import.competition.select}]]</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div id="autoImportCompetitionName" class="form-group has-feedback"
+                             th:classappend="${#fields.hasErrors('competitionName')}?'has-error':''">
+                            <div class="input-padding">
+                                <label class="control-label required">[[#{competition.name}]]</label>
+                                <div>
+                                    <input type="text" name="competitionName" id="auto-import-comp-name-input"
+                                           class="form-control"
+                                           th:placeholder="#{competition.name}" th:value="*{competitionName}"/>
+                                </div>
+                                <span th:if="${#fields.hasErrors('competitionName')}"
+                                      th:text="${#fields.errors('competitionName').get(0)}" class="help-block"></span>
+                            </div>
+                        </div>
+
+
+                        <div id="auto-importCompetitionId" class="form-group has-feedback hide">
+                            <label class="control-label">ID</label>
+                            <div>
+                                <input type="text" name="competitionId" id="auto-import-comp-id-input"
+                                       class="form-control"
+                                       th:placeholder="ID" th:value="*{competitionId}"/>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer popup-footer">
+                            <button type="submit" class="btn btn-primary import-popup" id="auto-competition-button"
+                                    th:attr="data-loading-text=#{import.button.processing}, data-save-text=#{competition.button.create}">
+                                [[#{competition.button.create}]]
+                            </button>
+                            <button id="cancel-button" type="button" class="btn btn-default import-popup"
+                                    data-dismiss="modal">
+                                [[#{competition.button.cancel}]]
+                            </button>
+                        </div>
+                        <script th:inline="javascript" th:src="@{/js/auto-import-competition.js}"></script>
+                    </form>
+                </div>
+
+            </div>
+
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+
+</div>

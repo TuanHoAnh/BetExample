@@ -1,0 +1,42 @@
+<!--
+  ~ Copyright (c) 2017. KMS Technology, Inc.
+  -->
+
+<th:block xmlns:th="http://www.thymeleaf.org"
+          th:fragment="head">
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport"/>
+    <meta th:if="${_csrf}" th:name="_csrf" th:content="${_csrf.token}"/>
+    <meta th:if="${_csrf}" th:name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <meta http-equiv="refresh" content="${session.maxInactiveInterval}"/>
+
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/3.3.7/dist/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/4.7.0/css/font-awesome.min.css}"/>
+    <link rel="stylesheet" th:href="@{/webjars/ionicons/2.0.1/css/ionicons.min.css}"/>
+    <link rel="stylesheet" th:href="@{/webjars/adminlte/2.3.11/dist/css/AdminLTE.min.css}"/>
+    <link rel="stylesheet" th:href="@{/webjars/adminlte/2.3.11/dist/css/skins/skin-blue.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/app.css}"/>
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}" />
+    <link rel="stylesheet" th:href="@{/css/bootstrap-tagsinput.css}"/>
+    <link rel="stylesheet" th:href="@{/css/import.css}">
+    <link rel="stylesheet" th:href="@{/webjars/toastr/2.1.2/build/toastr.min.css}"/>
+
+    <link rel="stylesheet" th:href="@{/webjars/adminlte/2.3.11/plugins/datatables/dataTables.bootstrap.css}"/>
+
+
+    <link rel="stylesheet" th:href="@{/webjars/adminlte/2.3.11/plugins/iCheck/square/blue.css}">
+    <link rel="stylesheet" th:href="@{/css/match.css}"/>
+    <link rel="stylesheet" th:href="@{/css/competitor.css}"/>
+    <link rel="stylesheet" th:href="@{/css/competition.css}"/>
+    <link rel="stylesheet" th:href="@{/webjars/adminlte/2.3.11/plugins/morris/morris.css}"/>
+
+    <link rel="stylesheet" th:href="@{/webjars/adminlte/2.3.11/plugins/datepicker/datepicker3.css}"/>
+    <link rel="stylesheet" th:href="@{/webjars/clockpicker/0.0.7/dist/bootstrap-clockpicker.css}"/>
+    <!--HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]-->
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+</th:block>

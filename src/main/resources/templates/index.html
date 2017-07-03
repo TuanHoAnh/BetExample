@@ -1,0 +1,65 @@
+<!DOCTYPE html >
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      xmlns="http://www.w3.org/1999/xhtml"
+      layout:decorate="layouts/main">
+<head>
+    <meta charset="UTF-8"/>
+    <meta th:name="_csrf" th:content="${_csrf.token}"/>
+    <meta th:name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <title>Dashboard</title>
+</head>
+<body>
+
+
+<section class="content-header" layout:fragment="content-header">
+    <h1 class="box-title" th:utext="#{game.rules.title}"></h1>
+</section>
+
+
+<div class="content" layout:fragment="content-body">
+    <div class="row">
+
+        <div class="pad margin no-print">
+            <div class="callout callout-info">
+                <h4><i class="fa fa-fw fa-warning"></i>[[#{game.rules.note}]]</h4>
+                <span class="box-title" th:utext="#{game.rules.content}"></span>
+            </div>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <p class="box-title"><i class="fa fa-fw fa-calculator"></i><b th:text="#{game.rules.calculate.title}"></b></p>
+
+                </div><!-- /.box-header -->
+                <div class="box-body">
+                    <p th:utext="#{game.rules.calculate.content}"></p>
+
+
+                </div><!-- /.box-body -->
+            </div><!-- /.box -->
+        </div><!-- /.col -->
+
+    </div>
+    <div class="row">
+
+        <div class="col-sm-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <p class="box-title"><i class="fa fa-fw fa-sun-o"></i><b th:text="#{game.rules.example.title}"></b></p>
+                </div><!-- /.box-header -->
+                <div class="box-body">
+                    <p th:utext="#{game.rules.example.content}"></p>
+
+                </div><!-- /.box-body -->
+            </div><!-- /.box -->
+        </div><!-- /.col -->
+
+    </div>
+</div>
+
+</body>
+</html>

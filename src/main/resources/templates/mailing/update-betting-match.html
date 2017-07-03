@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<!--
+  ~ Copyright (c) 2017. KMS Technology, Inc.
+  -->
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="#{email.bettinggroup.new.mail.title}">New Betting Group</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+<p th:text="#{email.greeting(${name})}">Dear [User],</p>
+<p th:text="#{email.betting.match.new.mail.title}">Your betting match has changed.</p>
+
+<p th:text="#{email.betting.match.name(${matchName})}">Name of Betting Match</p>
+<p th:text="#{email.betting.match.amount(${betAmount})}">Amount</p>
+
+<p th:text="#{email.betting.match.balance(${balance})}">Balance</p>
+
+<p th:text="#{email.betting.match.expired.time(${expiredTime})}">Expired time: </p>
+<p th:text="#{email.betting.match.comment(${comment})}">Comment</p>
+
+<p th:text="#{email.betting.match.visit.link(${matchName})}">Link</p>
+<a th:text="${matchName}" th:href="@{|${baseUrl}${linkBettingMatch}|}"></a>
+
+
+<p>
+    <span th:text="#{email.greeting-end}">Regards,</span>
+    <br/>
+    <em th:text="#{email.signature}">NgayThoBet.</em>
+</p>
+</body>
+</html>

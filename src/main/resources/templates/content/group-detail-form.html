@@ -1,0 +1,226 @@
+<div xmlns:th="http://www.thymeleaf.org" th:remove="tag">
+    <section id="group-content-form" class="content" th:fragment="group-content-form">
+        <div>
+            <!-- Custom Tabs (Pulled to the right) -->
+            <div class="nav-tabs-custom">
+                <ul class="nav nav-tabs pull-right">
+                    <li ><a class="tab-group-bet"
+                                          th:href="@{#/competitions/}+${aliasKey}+@{/bettings/} + ${groupId}+ @{/statistic-betting-players}"
+                                          data-toggle="tab">[[#{group.detail.tab.statistic}]]</a></li>
+                    <li class="active"><a class="tab-group-bet"
+                           th:href="@{#/competitions/}+${aliasKey}+@{/bettings/} + ${groupId}+ @{/reload}"
+                           data-toggle="tab">[[#{group.detail.tab.bettinglist}]]</a></li>
+                    <li class="pull-left header" id="tab-header" th:text="#{bettinggroupdetail.group}  + ' ' + ${bettingGroup.name}"></li>
+                </ul>
+                <div id="group-content" class="tab-content">
+                    <div class="row">
+                        <div class="col-md-3 col-sm-3 col-xs-12 pull-right">
+                            <a th:href="'#/competitions/'+ ${aliasKey} + '/bettings/' + ${groupId} + '/matches/'" class="btn btn-success pull-right">Betting Match Management</a>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-md-3 col-sm-3 col-xs-12">
+                            <div>
+                                <div class="box box-primary">
+                                    <div class="box-header with-border">
+                                        <h3 class="box-title">[[#{bettinggroupdetail.details}]]</h3>
+                                    </div>
+                                    <div class="box-body box-profile">
+                                        <form id="publishBettingGroup" th:action="@{'/competitions/'+ ${aliasKey} + '/bettings/' + ${bettingGroup.id} + '/publish'}" method="POST">
+                                            <div id="group-detail-body" th:fragment="group-detail-body" th:object="${bettingGroup}">
+                                                <ul class="list-group" th:with="bettingGroupStatus=${bettingGroup.status.toString()}">
+                                                    <li class="list-group-item">
+                                                        <b>[[#{bettinggroupdetail.form.name}]]:</b><input id="groupName" name="id" type="text" th:field="*{name}" class="form-control" readonly>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <b>[[#{bettinggroupdetail.form.id}]]:</b><input id="groupId" name="id" type="text" th:field="*{id}" class="form-control" readonly>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <b>[[#{bettinggroupdetail.form.players}]]:</b><input id="groupPlayers" name="id" type="text" th:field="*{players}" class="form-control" readonly>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <b>[[#{bettinggroupdetail.form.numberOfPlayers}]]:</b><b id="numberOfPlayers" name="numberOfPlayers" type="text" th:text="${numberOfPlayers}" class="form-control" readonly></b>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <b>[[#{bettinggroupdetail.form.moderatorName}]]:</b><b id="moderatorName" name="moderatorName" type="text" th:text="${moderatorName}" class="form-control" readonly></b>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <b>[[#{bettinggroupdetail.form.status}]]:</b>
+                                                        <label th:if="${bettingGroupStatus == 'DRAFT'}" id="groupStt" name="groupStt" th:text="*{status}" class="form-control label label-warning"></label>
+                                                        <label th:unless="${bettingGroupStatus == 'DRAFT'}" id="groupStt" name="groupStt" th:text="*{status}" class="form-control label label-success"></label>
+                                                    </li>
+                                                    <br>
+                                                    <div th:if="${isMod}">
+                                                        <button th:if="${bettingGroupStatus == 'DRAFT'}" type="submit" class="btn btn-success col-md-5 col-sm-5 pull-left">
+                                                            [[#{updatebettinggroup.publish.button}]]
+                                                        </button>
+                                                        <button th:unless="${bettingGroupStatus == 'DRAFT'}" type="submit" class="btn btn-success col-md-5 col-sm-5 pull-left" disabled>
+                                                            [[#{updatebettinggroup.publish.button}]]
+                                                        </button>
+                                                        <a th:if="${isMod}" class="btn btn-info col-md-5 col-sm-5 pull-right" onclick="onUpdateBettingGroup()">
+                                                            [[#{updatebettinggroup.update.button}]]
+                                                        </a>
+                                                    </div>
+                                                </ul>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="group-rule-body" th:fragment="group-rule-body" th:object="${bettingGroup}">
+                                <div>
+                                    <div class="box box-primary">
+                                        <div class="box-header with-border">
+                                            <p class="box-title">[[#{bettinggroupdetail.form.rule}]]</p>
+                                        </div>
+                                        <div class="box-body">
+                                            <textarea id="groupRules" name="rules" type="text" th:field="*{rules}" class="form-control" rows="25" readonly></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-9 col-sm-9 col-xs-12 pull-right">
+                            <div class="box box-primary" th:each="element : ${matchRounds}">
+                                <div class="box-header with-border">
+                                    <p class="box-title" th:text="|${element.name} #{match.round}|">keyvalue</p>
+                                </div>
+                                <div class="box-body">
+                                    <div class="table-responsive">
+                                    <table id="competitorView" class="table table-bordered table-hover dataTable" role="grid">
+                                        <thead>
+                                        <tr>
+                                            <th>[[#{betting.match.table.datetime}]]</th>
+                                            <th>[[#{betting.match.table.competitor1}]]</th>
+                                            <th>[[#{betting.match.table.score}]]</th>
+                                            <th>[[#{betting.match.table.competitor2}]]</th>
+                                            <th>[[#{betting.match.table.location}]]</th>
+                                            <th>[[#{betting.match.table.action}]]</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="competitor-table-body">
+                                        <tr th:each="bettingMatch : ${element.matchList}">
+                                            <td class="col-md-2 col-sm-2 col-xs-12">
+                                                <a th:text="${bettingMatch.match.startTime}"></a>
+                                            </td>
+                                            <td class="col-md-2 col-sm-2 col-xs-12">
+                                                <img th:src="@{${bettingMatch.match.competitor1.logo}}"
+                                                     class="img-circle" alt="competitor1-logo" width="30" height="30">
+                                                <a th:text="${bettingMatch.match.competitor1.name}"></a>
+                                            </td>
+                                            <td class="col-md-1 col-sm-1 col-xs-12">
+                                                <a th:text="${bettingMatch.match.score1 + '-' + bettingMatch.match.score2}"></a>
+                                            </td>
+                                            <td class="col-md-2 col-sm-2 col-xs-12">
+                                                <img th:src="@{${bettingMatch.match.competitor2.logo}}"
+                                                     class="img-circle" alt="competitor2-logo" width="30" height="30">
+                                                <a th:text="${bettingMatch.match.competitor2.name}"></a>
+                                            </td>
+                                            <td class="col-md-3 col-sm-3 col-xs-12">
+                                                <a th:text="${bettingMatch.match.location}"></a>
+                                            </td>
+                                            <td>
+                                                <a th:if="${isMember}" data-toggle="modal" data-target="#popupBetMatchOnCompetitions"
+                                                   class="btn btn-success pull-left col-md-5 col-sm-5 bet-button"
+                                                   th:attr="betting-match-id = ${bettingMatch.id}">[[#{betting.match.form.bet}]]</a>
+
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+
+            </div>
+            <!-- nav-tabs-custom -->
+        </div>
+        <!-- /.col -->
+        <!-- /.row -->
+
+        <div class="modal fade" role="dialog" id="popupBetMatchOnCompetitions">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header" style="background-color: #008d4c !important; color: white ! important; text-align: center; font-size: 20px;">
+                        <h3 class="modal-title" th:text="#{betAMatch.form.title}">Betting match details</h3>
+                    </div>
+                    <div class="modal-body">
+                        <div th:fragment="betting-match-detail-for-bet" id="bettingMatchDetailForBet"></div>
+                    </div>
+                    <div class="modal-footer" style="background-color: #f9f9f9; padding: 20px 10px;">
+                        <button type="button" class="btn btn-danger btn-block" data-dismiss="modal" ><span class="glyphicon glyphicon-remove"></span>[[#{betAMatch.form.button.cancel}]]</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <input type="hidden" id="competitionAliasKey" th:value="${aliasKey}">
+        <script src="/js/bet.js" type="text/javascript" charset="utf-8"></script>
+        <script th:inline="javascript">
+
+            $('#publishBettingGroup').on('submit', function (event) {
+                event.preventDefault();
+
+                $.ajax({
+                    type: 'POST',
+                    beforeSend: function (request) {
+                        request.setRequestHeader(header, token);
+                    },
+                    url: $('#publishBettingGroup').attr('action'),
+                    data: $('#publishBettingGroup').serialize(),
+                    success: function (response) {
+
+                        if ($(response).find('#groupStt').text() === "DRAFT") {
+                            toastr.error([[#{updatebettinggroup.publish.fail}]], [[#{updatebettinggroup.publish.fail.error}]]);
+
+                        } else {
+                            toastr.success([[#{updatebettinggroup.publish.successful}]]);
+                        }
+                        $('#group-detail-body').replaceWith(response);
+                    },
+                    fail: function (e) {
+                        console.log(e);
+                    },
+                    error: function (e) {
+                        console.log(e);
+                    }
+                });
+            });
+
+            function onUpdateBettingGroup() {
+
+                $.ajax({
+                    type: 'GET',
+                    beforeSend: function (request) {
+                        request.setRequestHeader(header, token);
+                    },
+                    url: '/competitions/'+ [[${aliasKey}]] + '/bettings/' + [[${bettingGroup.id}]] +'/update',
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (response) {
+
+                        $('#group-content-form').replaceWith(response);
+                        tagit();
+
+                    },
+                    fail: function (e) {
+                        console.log(e);
+                    },
+                    error: function (e) {
+                        console.log(e);
+                    }
+                });
+            }
+
+        </script>
+    </section>
+</div>

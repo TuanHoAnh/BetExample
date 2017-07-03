@@ -1,0 +1,15 @@
+.competitor-list-table td{
+    max-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.fixed-No-column{
+    width: 10%;
+}
+.fixed-competitor-name-column{
+    width: 70%;
+}
+.fixed-logo-column{
+    width: 20%;
+}

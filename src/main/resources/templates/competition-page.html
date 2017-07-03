@@ -1,0 +1,99 @@
+<div class="content" xmlns:th="http://www.w3.org/1999/xhtml">
+    <div class="competition-box box-center">
+        <div class="box-header">
+            <a th:if="${competitionForm.id == null}">
+                <h4 class="box-header" th:text="#{competition.create.title}"></h4>
+            </a>
+
+            <a th:if="${competitionForm.id != null}">
+                <h4 class="box-header" th:text="#{competition.update.title}"></h4>
+            </a>
+
+        </div>
+
+        <form th:object="${competitionForm}" method="POST"
+              class="form-horizontal" id="competitionForm" enctype="multipart/form-data" th:attr="data-create-message=#{competition.save.success},
+                       data-publish-message=#{competition.published.success},data-update-message=#{competition.update.success},
+                        data-invalid-type-message=#{create.competition.logo.type},data-invalid-size-message=#{create.competition.logo.size},data-invalid-rounds-message=#{create.competition.rounds.are.duplicated}">
+            <input type="hidden" id="id-competition" th:field="*{id}"/>
+            <input type="hidden" id="is-pressed-publish" th:field="*{isPressedPublish}"/>
+            <input type="hidden" id="status" th:field="*{status}"/>
+            <div class="box-body">
+                <div id="competitionNumberOfCompetitor" class="form-group has-feedback">
+                    <input type="hidden" id="number-of-competitor" th:field="*{numberOfCompetitor}"/>
+                </div>
+
+                <div id="competitionNumberOfMatch" class="form-group has-feedback">
+                    <input type="hidden" id="number-of-match" th:field="*{numberOfMatch}"/>
+                </div>
+
+                <div id="competitionKey" class="form-group has-feedback input-padding ">
+                    <label class="col-sm-2 control-label">[[#{competition.alias}]]<label class="text-danger" >*</label></label>
+                    <div class="col-sm-10">
+                        <div id = "invalid-alias-key-message" class="form-group has-feedback"></div>
+                        <input type="text" name="aliasKey" id="comp-key-input" class="form-control" maxlength="8"
+                               th:placeholder="#{competition.alias}" th:field="*{aliasKey}">
+
+                    </div>
+                </div>
+
+
+                <div id="competitionName" class="form-group has-feedback input-padding">
+                    <label class="col-sm-2 control-label">[[#{competition.name}]]<label class="text-danger" >*</label></label>
+                    <div class="col-sm-10">
+                        <div id = "invalid-name-message" class="form-group has-feedback"></div>
+                        <input type="text" name="name" id="comp-name-input" class="form-control" maxlength="50"
+                               th:placeholder="#{competition.name}" th:field="*{name}">
+
+                    </div>
+                </div>
+
+                <div id="competitionLogo" class="form-group has-feedback input-padding">
+                    <label class="col-sm-2 control-label">[[#{competition.logo}]]</label>
+                    <div class="col-sm-10">
+                        <div id = "invalid-logo-message" class="form-group has-feedback"></div>
+                        <img th:src="${competitionForm.logo}?:'/images/worldcup.jpg'" class="img-responsive" alt="Logo"
+                             width="100" height="100" id="competition-logo-upload">
+                        <div id="logo-field">
+                            <label for="logo-input" class="btn btn-default">[[#{competition.choose.file}]]</label>
+                            <input type="file" id="logo-input" name="userAvatar" accept=".png, .jpg, .jpeg" style="visibility:hidden;"
+                                   max-size="102400"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="competitionRounds" class="form-group has-feedback input-padding">
+                    <label class="col-sm-2 control-label">[[#{competition.round}]]<label class="text-danger" >*</label></label>
+                    <div class="col-sm-10">
+                        <div id = "invalid-rounds-message" class="form-group has-feedback"></div>
+                        <input type="text" name="rounds" id="comp-rounds-input" data-role="tagsinput"
+                               th:field="*{rounds}"/>
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="modal-footer">
+                <a th:if="${competitionForm.status != null}">
+                    <a th:if="${competitionForm.status.toString() != 'PUBLISHED'}">
+                        <button type="submit" id="btn-publish" class="btn btn-primary" onclick="onPublishButtonClick()">
+                            [[#{competition.form.publish}]]
+                        </button>
+                    </a>
+                </a>
+                <button type="submit" class="btn btn-primary" id="competition-button">
+                    [[#{competition.button.create}]]
+                </button>
+                <button type="button" class="btn btn-primary" id="btn-cancel" onclick="onCancelButtonClick()">
+                    [[#{competition.button.cancel}]]
+                </button>
+            </div>
+        </form>
+    </div><!-- /.modal-content -->
+
+    <script>
+                $('#comp-rounds-input').tagsinput('refresh');
+    </script>
+
+</div>
+<!--</div>-->

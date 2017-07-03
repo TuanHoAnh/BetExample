@@ -1,0 +1,67 @@
+.flagCompetitor {
+    width: 35px;
+}
+
+.match-competitor{
+    display: inline-block;
+}
+
+.distance-bottom{
+    margin-bottom: 5px;
+}
+
+.box-button {
+    padding: 5px;
+}
+
+.custom-action-button {
+    width: 100%;
+}
+
+.custom-asterisk{
+    color: red;
+}
+
+.fixed-datetime-column {
+    width: 20%;
+}
+
+.fixed-location-column {
+    width: 20%;
+}
+
+.fixed-competitor-column{
+    width: 25%;
+}
+
+.fixed-score-column{
+    width: 10%;
+}
+
+h4.box-header {
+    color: 	#4682B4;
+    font-weight: 600;
+    font-family: "Times New Roman", Georgia, Serif;
+}
+
+div.competition-box {
+    width: 60%;
+    padding-right: 70px;
+    background: white;
+}
+.box-center{
+    margin: auto;
+    width: 50%;
+    height: 50%;
+    padding-right: 10px;
+}
+
+.box-left-element {
+    width: 50%;
+    text-align: left;
+}
+
+.box-right-element {
+    width: 50%;
+    text-align: right;
+}
